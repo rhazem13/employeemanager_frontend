@@ -70,8 +70,18 @@
           routerLinkActive="active"
           (click)="closeMobileMenu()"
         >
-          <mat-icon>work</mat-icon>
-          <span>My Dashboard</span>
+          <mat-icon>dashboard</mat-icon>
+          <span>Dashboard</span>
+        </a>
+      </li>
+      <li *ngIf="userRole === 'Employee'">
+        <a
+          routerLink="/employee/profile"
+          routerLinkActive="active"
+          (click)="closeMobileMenu()"
+        >
+          <mat-icon>person</mat-icon>
+          <span>View Profile</span>
         </a>
       </li>
     </ul>

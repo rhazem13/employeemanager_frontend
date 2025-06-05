@@ -1,0 +1,88 @@
+<div class="profile-container">
+  @if (isLoading) {
+  <div class="loading-spinner">
+    <mat-spinner diameter="40"></mat-spinner>
+  </div>
+  } @if (personalData) {
+  <div class="profile-content">
+    <!-- Personal Information Card -->
+    <mat-card class="info-card">
+      <mat-card-header>
+        <mat-card-title>Personal Information</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="info-grid">
+          <div class="info-item">
+            <label>Name</label>
+            <p>{{ personalData.firstName }} {{ personalData.lastName }}</p>
+          </div>
+          <div class="info-item">
+            <label>Email</label>
+            <p>{{ personalData.email }}</p>
+          </div>
+          <div class="info-item">
+            <label>Phone</label>
+            <p>{{ personalData.phoneNumber }}</p>
+          </div>
+          <div class="info-item">
+            <label>National ID</label>
+            <p>{{ personalData.nationalId }}</p>
+          </div>
+          <div class="info-item">
+            <label>Age</label>
+            <p>{{ personalData.age }}</p>
+          </div>
+         
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Weekly Attendance Card -->
+    <mat-card class="attendance-card">
+      <mat-card-header>
+        <mat-card-title>Weekly Attendance History</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <table
+          mat-table
+          [dataSource]="personalData.weeklyAttendance"
+          class="attendance-table"
+        >
+          <!-- Week Start Column -->
+          <ng-container matColumnDef="weekStart">
+            <th mat-header-cell *matHeaderCellDef>Week Starting</th>
+            <td mat-cell *matCellDef="let week">
+              {{ formatDate(week.weekStart) }}
+            </td>
+          </ng-container>
+
+          <!-- Days Present Column -->
+          <ng-container matColumnDef="daysPresent">
+            <th mat-header-cell *matHeaderCellDef>Days Present</th>
+            <td mat-cell *matCellDef="let week">{{ week.daysPresent }}</td>
+          </ng-container>
+
+          <!-- Total Hours Column -->
+          <ng-container matColumnDef="totalHours">
+            <th mat-header-cell *matHeaderCellDef>Total Hours</th>
+            <td mat-cell *matCellDef="let week">
+              {{ week.totalHours.toFixed(1) }}
+            </td>
+          </ng-container>
+
+          <!-- Average Hours Column -->
+          <ng-container matColumnDef="averageHours">
+            <th mat-header-cell *matHeaderCellDef>Avg. Hours/Day</th>
+            <td mat-cell *matCellDef="let week">
+              {{ week.averageHoursPerDay.toFixed(1) }}
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  }
+</div>

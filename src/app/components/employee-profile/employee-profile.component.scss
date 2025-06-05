@@ -1,0 +1,130 @@
+.profile-container {
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.loading-spinner {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+}
+
+.profile-content {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.info-card {
+  height: fit-content;
+
+  .mat-mdc-card-header {
+    padding: 16px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+
+    .mat-mdc-card-title {
+      color: var(--primary-color);
+      margin: 0;
+      font-size: 20px;
+    }
+  }
+
+  .mat-mdc-card-content {
+    padding: 24px;
+  }
+}
+
+.info-grid {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.info-item {
+  label {
+    display: block;
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 4px;
+  }
+
+  p {
+    margin: 0;
+    font-size: 16px;
+    color: #333;
+    font-weight: 500;
+  }
+}
+
+.attendance-card {
+  grid-column: 1 / -1;
+
+  .mat-mdc-card-header {
+    padding: 16px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+
+    .mat-mdc-card-title {
+      color: var(--primary-color);
+      margin: 0;
+      font-size: 20px;
+    }
+  }
+
+  .mat-mdc-card-content {
+    padding: 0;
+    overflow-x: auto;
+  }
+}
+
+.attendance-table {
+  width: 100%;
+
+  .mat-mdc-header-row {
+    background-color: var(--primary-color);
+
+    .mat-mdc-header-cell {
+      color: white;
+      font-weight: 500;
+      font-size: 14px;
+      padding: 16px;
+    }
+  }
+
+  .mat-mdc-row {
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.04);
+    }
+
+    .mat-mdc-cell {
+      padding: 16px;
+      font-size: 14px;
+      color: rgba(0, 0, 0, 0.87);
+    }
+
+    &:not(:last-child) {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .profile-container {
+    padding: 16px;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .attendance-table {
+    .mat-mdc-header-cell,
+    .mat-mdc-cell {
+      padding: 12px;
+      font-size: 13px;
+    }
+  }
+}

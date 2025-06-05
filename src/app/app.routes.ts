@@ -87,6 +87,13 @@ export const routes: Routes = [
                 './components/employee-dashboard/employee-dashboard.component'
               ).then((m) => m.EmployeeDashboardComponent),
           },
+          {
+            path: 'profile',
+            loadComponent: () =>
+              import(
+                './components/employee-profile/employee-profile.component'
+              ).then((m) => m.EmployeeProfileComponent),
+          },
         ],
       },
       // Root path redirect based on role

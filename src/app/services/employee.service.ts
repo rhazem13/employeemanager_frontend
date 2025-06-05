@@ -96,6 +96,21 @@ export class EmployeeService {
     return this.http.delete(`${this.apiUrl}/${id}`, { headers });
   }
 
+  getPersonalData(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/personal-data`, {
+      headers: this.getHeaders(),
+    });
+  }
+
+  private getHeaders(): HttpHeaders {
+    const token = this.authService.getToken();
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('Authorization', `Bearer ${token}`);
+    }
+    return headers;
+  }
+
   private handleError(error: HttpErrorResponse) {
     let errorMessage = 'An unknown error occurred!';
     if (error.error instanceof ErrorEvent) {
