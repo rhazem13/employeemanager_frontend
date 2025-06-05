@@ -1,1 +1,28 @@
-<p>dashboard works!</p>
+<div class="dashboard-container">
+  <h2>Welcome to the Dashboard</h2>
+
+  <div *ngIf="userRole === 'Admin'" class="admin-dashboard">
+    <h3>Admin Dashboard</h3>
+    <p>
+      Welcome, Admin! Here you will find your administration tools and reports.
+    </p>
+    <!-- Admin specific content/links will go here -->
+    <p><a routerLink="/admin/employees">View Employee List</a></p>
+  </div>
+
+  <div *ngIf="userRole === 'Employee'" class="employee-dashboard">
+    <h3>Employee Dashboard</h3>
+    <p>
+      Welcome, Employee! Here you can view your profile and attendance
+      information.
+    </p>
+    <!-- Employee specific content/links will go here -->
+  </div>
+
+  <div *ngIf="!userRole">
+    <p>Loading user information or role not available...</p>
+  </div>
+
+  <!-- Add a logout button -->
+  <button (click)="logout()">Logout</button>
+</div>

@@ -1,0 +1,71 @@
+<div class="employee-list-container">
+  <h2>Employee List</h2>
+
+  <div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="!errorMessage && employees.length > 0" class="employee-table">
+    <table>
+      <thead>
+        <tr>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Email</th>
+          <th>Phone Number</th>
+          <th>National ID</th>
+          <th>Age</th>
+          <th>Role</th>
+          <!-- Add other relevant headers as needed -->
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let employee of employees">
+          <td>{{ employee.firstName }}</td>
+          <td>{{ employee.lastName }}</td>
+          <td>{{ employee.email }}</td>
+          <td>{{ employee.phoneNumber }}</td>
+          <td>{{ employee.nationalId }}</td>
+          <td>{{ employee.age }}</td>
+          <td>{{ employee.role }}</td>
+          <!-- Add other relevant data cells -->
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pagination-controls" *ngIf="!errorMessage && totalItems > 0">
+    <span>Total Items: {{ totalItems }}</span>
+    <div class="page-info">Page {{ currentPage }} of {{ totalPages }}</div>
+    <div class="page-buttons">
+      <button
+        (click)="onPageChange(currentPage - 1)"
+        [disabled]="currentPage === 1"
+      >
+        Previous
+      </button>
+      <button
+        (click)="onPageChange(currentPage + 1)"
+        [disabled]="currentPage === totalPages"
+      >
+        Next
+      </button>
+    </div>
+    <div class="page-size">
+      Items per page:
+      <select
+        (change)="onPageSizeChange($any($event.target).value)"
+        [ngModel]="pageSize"
+      >
+        <option value="5">5</option>
+        <option value="10">10</option>
+        <option value="25">25</option>
+        <option value="50">50</option>
+      </select>
+    </div>
+  </div>
+
+  <div *ngIf="!errorMessage && employees.length === 0 && totalItems === 0">
+    <p>No employees found.</p>
+  </div>
+</div>
