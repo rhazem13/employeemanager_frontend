@@ -20,6 +20,7 @@ export class EmployeeService {
     pageNumber: number,
     pageSize: number,
     sortBy?: string,
+    sortDirection?: string,
     filter?: string
   ): Observable<any> {
     const token = this.authService.getToken();
@@ -35,6 +36,10 @@ export class EmployeeService {
 
     if (sortBy) {
       params = params.append('SortBy', sortBy);
+    }
+
+    if (sortDirection) {
+      params = params.append('SortDirection', sortDirection);
     }
 
     if (filter) {

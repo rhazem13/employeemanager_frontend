@@ -83,6 +83,7 @@ export class EmployeeListComponent implements OnInit {
         this.pageNumber,
         this.pageSize,
         this.sortColumn,
+        this.sortDirection,
         this.filterValue
       )
       .subscribe({
@@ -104,8 +105,12 @@ export class EmployeeListComponent implements OnInit {
   }
 
   onPageChange(event: any): void {
-    this.pageNumber = event.pageIndex + 1;
-    this.pageSize = event.pageSize;
+    if (typeof event === 'number') {
+      this.pageNumber = event;
+    } else {
+      this.pageNumber = event.pageIndex + 1;
+      this.pageSize = event.pageSize;
+    }
     this.loadEmployees();
   }
 
@@ -121,11 +126,8 @@ export class EmployeeListComponent implements OnInit {
         this.sortDirection = 'asc';
       }
       // Reset to the first page when sorting changes
-      this.currentPage = 1;
+      this.pageNumber = 1;
       this.loadEmployees();
-    } else {
-      // Optionally, provide feedback to the user that this column is not sortable
-      console.log(`Column ${column} is not sortable.`);
     }
   }
 

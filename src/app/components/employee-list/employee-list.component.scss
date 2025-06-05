@@ -129,3 +129,20 @@
   color: #e53935;
   margin-bottom: 15px;
 }
+
+.sortable-header {
+  cursor: pointer;
+  user-select: none;
+  // display: flex;
+  align-items: center;
+  gap: 8px;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
+.sort-icon {
+  font-size: 14px;
+  opacity: 0.8;
+}
