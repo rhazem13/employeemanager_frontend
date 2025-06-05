@@ -34,7 +34,7 @@ import { EmployeeService } from '../../services/employee.service';
     MatProgressSpinnerModule,
   ],
   templateUrl: './attendance-management.component.html',
-  styleUrls: ['./attendance-management.component.css'],
+  styleUrls: ['./attendance-management.component.scss'],
 })
 export class AttendanceManagementComponent implements OnInit {
   dailyRecords: DailyRecord[] = [];
