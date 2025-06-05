@@ -21,7 +21,6 @@ export class AuthService {
       // Decode token to get user role and employeeId
       try {
         const payload = JSON.parse(atob(token.split('.')[1]));
-        console.log('Token payload:', payload);
         if (payload.role) {
           this.userRoleSubject.next(payload.role);
           localStorage.setItem('user_role', payload.role); // Backup role in localStorage
@@ -45,7 +44,6 @@ export class AuthService {
           this.isAuthenticatedSubject.next(true);
           // Decode token to get user role and employeeId
           const payload = JSON.parse(atob(response.token.split('.')[1]));
-          console.log('Token payload:', payload);
           if (payload.role) {
             this.userRoleSubject.next(payload.role);
             localStorage.setItem('user_role', payload.role);
@@ -97,8 +95,6 @@ export class AuthService {
     return this.userRoleSubject.asObservable();
   }
 
-  
-
   getEmployeeIdObservable(): Observable<string | null> {
     return this.employeeIdSubject.asObservable();
   }
@@ -118,13 +114,15 @@ export class AuthService {
 
   private handleError(error: any) {
     let errorMessage = 'An error occurred';
+    console.log('Error:', error);
     if (error.error instanceof ErrorEvent) {
       // Client-side error
       errorMessage = error.error.message;
     } else {
       // Server-side error
-      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+      errorMessage = `${error.error.message}`;
+      console.log('Error message:', errorMessage);
     }
-    return throwError(() => errorMessage);
+    return throwError(() => error);
   }
 }
