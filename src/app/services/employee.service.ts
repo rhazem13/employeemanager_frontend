@@ -102,6 +102,12 @@ export class EmployeeService {
     });
   }
 
+  updateSignature(data: { signature: string }): Observable<any> {
+    return this.http.post(`${this.apiUrl}/signature`, data, {
+      headers: this.getHeaders(),
+    });
+  }
+
   private getHeaders(): HttpHeaders {
     const token = this.authService.getToken();
     let headers = new HttpHeaders();

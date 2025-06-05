@@ -21,21 +21,6 @@
       } @else {
       <div class="attendance-info">
         <p class="status-text">You have checked in for today</p>
-        <p class="time-info">
-          Check-in Time: {{ formatTime(todayAttendance.checkInTime) }}
-        </p>
-        @if (todayAttendance?.checkOutTime) {
-        <p class="time-info">
-          Check-out Time: {{ formatTime(todayAttendance.checkOutTime) }}
-        </p>
-        <p class="hours-info">
-          Hours Worked: {{ todayAttendance.hoursWorked.toFixed(2) }}
-        </p>
-        } @else {
-        <button mat-raised-button (click)="checkOut()" class="action-button">
-          Check Out
-        </button>
-        }
       </div>
       }
     </mat-card-content>

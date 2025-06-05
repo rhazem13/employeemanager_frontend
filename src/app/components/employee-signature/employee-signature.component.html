@@ -1,0 +1,78 @@
+<div class="signature-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Employee Signature</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div *ngIf="isLoading" class="loading-spinner">
+        <mat-spinner diameter="40"></mat-spinner>
+      </div>
+
+      <div *ngIf="!isLoading">
+        <!-- Show message if signature exists -->
+        <div *ngIf="hasSignature" class="signature-exists">
+          <mat-icon>check_circle</mat-icon>
+          <p>Your signature has already been enrolled in the system.</p>
+        </div>
+
+        <!-- Show signature pad if no signature exists -->
+        <div *ngIf="!hasSignature" class="signature-content">
+          <div class="mode-toggle">
+            <button mat-button (click)="toggleMode()">
+              <mat-icon>{{
+                signatureMode === "draw" ? "upload" : "draw"
+              }}</mat-icon>
+              Switch to {{ signatureMode === "draw" ? "Upload" : "Draw" }} Mode
+            </button>
+          </div>
+
+          <!-- Draw signature -->
+          <div *ngIf="signatureMode === 'draw'" class="signature-pad-container">
+            <p class="instruction">Please sign in the box below:</p>
+            <canvas #signaturePad width="600" height="200"></canvas>
+          </div>
+
+          <!-- Upload signature -->
+          <div *ngIf="signatureMode === 'upload'" class="upload-container">
+            <div class="upload-area" [class.has-file]="uploadedSignature">
+              <input
+                type="file"
+                (change)="onFileSelected($event)"
+                accept="image/*"
+                #fileInput
+                style="display: none"
+              />
+              <div
+                *ngIf="!uploadedSignature"
+                class="upload-prompt"
+                (click)="fileInput.click()"
+              >
+                <mat-icon>upload</mat-icon>
+                <p>Click to upload signature image</p>
+                <small>Supported formats: PNG, JPG, JPEG</small>
+              </div>
+              <img
+                *ngIf="uploadedSignature"
+                [src]="uploadedSignature"
+                alt="Uploaded signature"
+              />
+            </div>
+          </div>
+
+          <!-- Action buttons -->
+          <div class="action-buttons">
+            <button mat-button color="warn" (click)="clearSignature()">
+              <mat-icon>clear</mat-icon>
+              Clear
+            </button>
+            <button mat-button color="primary" (click)="saveSignature()">
+              <mat-icon>save</mat-icon>
+              Save Signature
+            </button>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

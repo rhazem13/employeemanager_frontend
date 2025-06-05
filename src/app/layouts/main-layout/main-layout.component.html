@@ -94,6 +94,16 @@
           <span>Check-In History</span>
         </a>
       </li>
+      <li *ngIf="userRole === 'Employee'">
+        <a
+          routerLink="/employee/signature"
+          routerLinkActive="active"
+          (click)="closeMobileMenu()"
+        >
+          <mat-icon>draw</mat-icon>
+          <span>Signature</span>
+        </a>
+      </li>
     </ul>
 
     <div class="logout-button">

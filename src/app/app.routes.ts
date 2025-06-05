@@ -101,6 +101,13 @@ export const routes: Routes = [
                 './components/check-in-history/check-in-history.component'
               ).then((m) => m.CheckInHistoryComponent),
           },
+          {
+            path: 'signature',
+            loadComponent: () =>
+              import(
+                './components/employee-signature/employee-signature.component'
+              ).then((m) => m.EmployeeSignatureComponent),
+          },
         ],
       },
       // Root path redirect based on role
