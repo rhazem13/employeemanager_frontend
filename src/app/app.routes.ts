@@ -94,6 +94,13 @@ export const routes: Routes = [
                 './components/employee-profile/employee-profile.component'
               ).then((m) => m.EmployeeProfileComponent),
           },
+          {
+            path: 'check-in-history',
+            loadComponent: () =>
+              import(
+                './components/check-in-history/check-in-history.component'
+              ).then((m) => m.CheckInHistoryComponent),
+          },
         ],
       },
       // Root path redirect based on role
