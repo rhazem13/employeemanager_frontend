@@ -157,7 +157,7 @@
       </div>
     </div>
 
-    <div class="form-group">
+    <!-- <div class="form-group">
       <label for="role">Role</label>
       <select id="role" formControlName="role" required>
         <option value="Employee">Employee</option>
@@ -177,31 +177,18 @@
       <div *ngIf="validationErrors['Role']" class="error-message">
         <div *ngFor="let error of validationErrors['Role']">{{ error }}</div>
       </div>
-    </div>
+    </div> -->
 
     <!-- This block displays general validation errors from backend, if any are not tied to a specific field -->
     <div
-      *ngIf="validationErrors && objectKeys(validationErrors).length > 0"
-      class="api-validation-errors"
+      *ngIf="backendErrors && objectKeys(backendErrors).length > 0"
+      class="api-error-message"
     >
-      <p>Validation Errors:</p>
+      <p>Please correct the following errors:</p>
+      <!-- Only display field-level errors here if they weren't displayed above -->
       <ul>
-        <li *ngFor="let field of objectKeys(validationErrors)">
-          <!-- Only display field-level errors here if they weren't displayed above -->
-          <ng-container
-            *ngIf="
-              !editEmployeeForm.get(field.toLowerCase()) ||
-              (editEmployeeForm.get(field.toLowerCase()) &&
-                !validationErrors[field])
-            "
-          >
-            <strong>{{ field }}:</strong>
-            <ul>
-              <li *ngFor="let error of validationErrors[field]">
-                {{ error }}
-              </li>
-            </ul>
-          </ng-container>
+        <li *ngFor="let error of backendErrors">
+          {{ error }}
         </li>
       </ul>
     </div>
