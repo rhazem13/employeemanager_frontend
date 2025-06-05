@@ -21,6 +21,7 @@ export class AddEmployeeComponent implements OnInit {
   addEmployeeForm!: FormGroup;
   errorMessage: string | null = null;
   validationErrors: any = {};
+  backendErrors: string[] = [];
   objectKeys = Object.keys;
   signaturePreview: string | null = null;
 
@@ -119,6 +120,7 @@ export class AddEmployeeComponent implements OnInit {
   onSubmit(): void {
     this.errorMessage = null;
     this.validationErrors = {};
+    this.backendErrors = [];
 
     if (this.addEmployeeForm.valid) {
       const formData = this.addEmployeeForm.value;
@@ -139,7 +141,12 @@ export class AddEmployeeComponent implements OnInit {
         error: (error) => {
           console.error('Error adding employee', error);
           if (error.status === 400 && error.error && error.error.errors) {
-            this.validationErrors = error.error.errors;
+            this.backendErrors = error.error.errors;
+            // Extract all error messages into a flat array
+            this.backendErrors = Object.values(error.error.errors)
+              .flat()
+              .filter((error): error is string => typeof error === 'string');
+            console.log('Backend Errors:', this.backendErrors);
           } else if (error.error && error.error.message) {
             this.errorMessage = error.error.message;
           } else {
