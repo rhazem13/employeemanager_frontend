@@ -1,0 +1,159 @@
+<div class="register-container">
+  <h2>Register</h2>
+  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="firstName">First Name</label>
+      <input type="text" id="firstName" formControlName="firstName" required />
+      <div
+        *ngIf="
+          registerForm.get('firstName')?.invalid &&
+          registerForm.get('firstName')?.touched
+        "
+        class="error-message"
+      >
+        <div *ngIf="registerForm.get('firstName')?.errors?.['required']">
+          First Name is required.
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="lastName">Last Name</label>
+      <input type="text" id="lastName" formControlName="lastName" required />
+      <div
+        *ngIf="
+          registerForm.get('lastName')?.invalid &&
+          registerForm.get('lastName')?.touched
+        "
+        class="error-message"
+      >
+        <div *ngIf="registerForm.get('lastName')?.errors?.['required']">
+          Last Name is required.
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input type="email" id="email" formControlName="email" required />
+      <div
+        *ngIf="
+          registerForm.get('email')?.invalid &&
+          registerForm.get('email')?.touched
+        "
+        class="error-message"
+      >
+        <div *ngIf="registerForm.get('email')?.errors?.['required']">
+          Email is required.
+        </div>
+        <div *ngIf="registerForm.get('email')?.errors?.['email']">
+          Enter a valid email.
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input
+        type="password"
+        id="password"
+        formControlName="password"
+        required
+      />
+      <div
+        *ngIf="
+          registerForm.get('password')?.invalid &&
+          registerForm.get('password')?.touched
+        "
+        class="error-message"
+      >
+        <div *ngIf="registerForm.get('password')?.errors?.['required']">
+          Password is required.
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="phoneNumber">Phone Number</label>
+      <input
+        type="text"
+        id="phoneNumber"
+        formControlName="phoneNumber"
+        required
+      />
+      <div
+        *ngIf="
+          registerForm.get('phoneNumber')?.invalid &&
+          registerForm.get('phoneNumber')?.touched
+        "
+        class="error-message"
+      >
+        <div *ngIf="registerForm.get('phoneNumber')?.errors?.['required']">
+          Phone Number is required.
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="nationalId">National ID</label>
+      <input
+        type="text"
+        id="nationalId"
+        formControlName="nationalId"
+        required
+      />
+      <div
+        *ngIf="
+          registerForm.get('nationalId')?.invalid &&
+          registerForm.get('nationalId')?.touched
+        "
+        class="error-message"
+      >
+        <div *ngIf="registerForm.get('nationalId')?.errors?.['required']">
+          National ID is required.
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="age">Age</label>
+      <input type="number" id="age" formControlName="age" required />
+      <div
+        *ngIf="
+          registerForm.get('age')?.invalid && registerForm.get('age')?.touched
+        "
+        class="error-message"
+      >
+        <div *ngIf="registerForm.get('age')?.errors?.['required']">
+          Age is required.
+        </div>
+        <div *ngIf="registerForm.get('age')?.errors?.['min']">
+          Age must be at least
+          {{ registerForm.get('age')?.errors?.['min']?.actual }}.
+        </div>
+        <div *ngIf="registerForm.get('age')?.errors?.['max']">
+          Age cannot be more than
+          {{ registerForm.get('age')?.errors?.['max']?.actual }}.
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="generalErrorMessage" class="error-message api-error-message">
+      {{ generalErrorMessage }}
+    </div>
+
+    <div *ngIf="validationErrors" class="api-validation-errors">
+      <p>Validation Errors:</p>
+      <ul>
+        <li *ngFor="let field of objectKeys(validationErrors)">
+          <strong>{{ field }}:</strong>
+          <ul>
+            <li *ngFor="let error of validationErrors[field]">
+              {{ error }}
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <button type="submit" [disabled]="registerForm.invalid">Register</button>
+  </form>
+  <p>Already have an account? <a routerLink="/login">Login here</a></p>
+</div>
