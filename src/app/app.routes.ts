@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { LoginComponent } from './components/login/login.component';
-import { RegisterComponent } from './components/register/register.component';
+// // import { RegisterComponent } from './components/register/register.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { EmployeeListComponent } from './components/employee-list/employee-list.component';
 import { AddEmployeeComponent } from './components/add-employee/add-employee.component';
@@ -17,13 +17,13 @@ export const routes: Routes = [
         (m) => m.LoginComponent
       ),
   },
-  {
-    path: 'register',
-    loadComponent: () =>
-      import('./components/register/register.component').then(
-        (m) => m.RegisterComponent
-      ),
-  },
+  // {
+  //   path: 'register',
+  //   loadComponent: () =>
+  //     import('./components/register/register.component').then(
+  //       (m) => m.RegisterComponent
+  //     ),
+  // },
 
   // Protected routes using the main layout
   {
