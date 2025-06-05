@@ -8,7 +8,6 @@ import {
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { AuthService } from './auth.service';
-
 @Injectable({
   providedIn: 'root',
 })
@@ -47,6 +46,51 @@ export class EmployeeService {
       .pipe(catchError(this.handleError));
   }
 
+  addEmployee(employeeData: any): Observable<any> {
+    const token = this.authService.getToken();
+    let headers = new HttpHeaders();
+
+    if (token) {
+      headers = headers.set('Authorization', `Bearer ${token}`);
+    }
+
+    return this.http
+      .post(this.apiUrl, employeeData, { headers: headers })
+      .pipe(catchError(this.handleError));
+  }
+
+  getEmployeeById(id: string): Observable<any> {
+    const token = this.authService.getToken();
+    let headers = new HttpHeaders();
+
+    if (token) {
+      headers = headers.set('Authorization', `Bearer ${token}`);
+    }
+
+    return this.http
+      .get(`${this.apiUrl}/${id}`, { headers: headers })
+      .pipe(catchError(this.handleError));
+  }
+
+  updateEmployee(id: string, employeeData: any): Observable<any> {
+    const token = this.authService.getToken();
+    let headers = new HttpHeaders();
+
+    if (token) {
+      headers = headers.set('Authorization', `Bearer ${token}`);
+    }
+
+    return this.http
+      .put(`${this.apiUrl}/${id}`, employeeData, { headers: headers })
+      .pipe(catchError(this.handleError));
+  }
+
+  deleteEmployee(id: string) {
+    const token = localStorage.getItem('jwt_token');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.delete(`${this.apiUrl}/${id}`, { headers });
+  }
+
   private handleError(error: HttpErrorResponse) {
     let errorMessage = 'An unknown error occurred!';
     if (error.error instanceof ErrorEvent) {
@@ -57,6 +101,7 @@ export class EmployeeService {
       errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
     }
     console.error(errorMessage);
-    return throwError(() => new Error(errorMessage));
+    // Propagate the error for component-specific handling
+    return throwError(() => error);
   }
 }

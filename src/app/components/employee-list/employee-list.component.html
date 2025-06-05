@@ -1,5 +1,10 @@
 <div class="employee-list-container">
   <h2>Employee List</h2>
+  <div class="actions">
+    <a mat-raised-button color="primary" routerLink="/admin/add-employee">
+      Add New Employee
+    </a>
+  </div>
 
   <div *ngIf="errorMessage" class="error-message">
     {{ errorMessage }}
@@ -16,57 +21,72 @@
   </div>
 
   <div *ngIf="!errorMessage && employees.length > 0" class="employee-table">
-    <table>
-      <thead>
-        <tr>
-          <th
-            (click)="onSort('firstName')"
-            [class.sorted]="sortColumn === 'firstName'"
+    <table mat-table [dataSource]="employees" class="mat-elevation-z8">
+      <!-- First Name Column -->
+      <ng-container matColumnDef="firstName">
+        <th mat-header-cell *matHeaderCellDef>First Name</th>
+        <td mat-cell *matCellDef="let employee">{{ employee.firstName }}</td>
+      </ng-container>
+
+      <!-- Last Name Column -->
+      <ng-container matColumnDef="lastName">
+        <th mat-header-cell *matHeaderCellDef>Last Name</th>
+        <td mat-cell *matCellDef="let employee">{{ employee.lastName }}</td>
+      </ng-container>
+
+      <!-- Email Column -->
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef>Email</th>
+        <td mat-cell *matCellDef="let employee">{{ employee.email }}</td>
+      </ng-container>
+
+      <!-- Phone Number Column -->
+      <ng-container matColumnDef="phoneNumber">
+        <th mat-header-cell *matHeaderCellDef>Phone Number</th>
+        <td mat-cell *matCellDef="let employee">{{ employee.phoneNumber }}</td>
+      </ng-container>
+
+      <!-- National ID Column -->
+      <ng-container matColumnDef="nationalId">
+        <th mat-header-cell *matHeaderCellDef>National ID</th>
+        <td mat-cell *matCellDef="let employee">{{ employee.nationalId }}</td>
+      </ng-container>
+
+      <!-- Age Column -->
+      <ng-container matColumnDef="age">
+        <th mat-header-cell *matHeaderCellDef>Age</th>
+        <td mat-cell *matCellDef="let employee">{{ employee.age }}</td>
+      </ng-container>
+
+      <!-- Role Column -->
+      <ng-container matColumnDef="role">
+        <th mat-header-cell *matHeaderCellDef>Role</th>
+        <td mat-cell *matCellDef="let employee">{{ employee.role }}</td>
+      </ng-container>
+
+      <!-- Actions Column -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let employee">
+          <button
+            mat-icon-button
+            color="primary"
+            [routerLink]="['/admin/employees/edit', employee.id]"
           >
-            First Name
-          </th>
-          <th
-            (click)="onSort('lastName')"
-            [class.sorted]="sortColumn === 'lastName'"
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            color="warn"
+            (click)="deleteEmployee(employee.id)"
           >
-            Last Name
-          </th>
-          <th (click)="onSort('email')" [class.sorted]="sortColumn === 'email'">
-            Email
-          </th>
-          <th
-            (click)="onSort('phoneNumber')"
-            [class.sorted]="sortColumn === 'phoneNumber'"
-          >
-            Phone Number
-          </th>
-          <th
-            (click)="onSort('nationalId')"
-            [class.sorted]="sortColumn === 'nationalId'"
-          >
-            National ID
-          </th>
-          <th (click)="onSort('age')" [class.sorted]="sortColumn === 'age'">
-            Age
-          </th>
-          <th (click)="onSort('role')" [class.sorted]="sortColumn === 'role'">
-            Role
-          </th>
-          <!-- Add other relevant headers as needed -->
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let employee of employees">
-          <td>{{ employee.firstName }}</td>
-          <td>{{ employee.lastName }}</td>
-          <td>{{ employee.email }}</td>
-          <td>{{ employee.phoneNumber }}</td>
-          <td>{{ employee.nationalId }}</td>
-          <td>{{ employee.age }}</td>
-          <td>{{ employee.role }}</td>
-          <!-- Add other relevant data cells -->
-        </tr>
-      </tbody>
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
   </div>
 

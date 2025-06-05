@@ -1,0 +1,231 @@
+<div class="add-employee-container">
+  <h2>Add New Employee</h2>
+
+  <form [formGroup]="addEmployeeForm" (submit)="onSubmit()">
+    <div class="form-group">
+      <label for="firstName">First Name</label>
+      <input type="text" id="firstName" formControlName="firstName" required />
+      <div
+        *ngIf="
+          addEmployeeForm.get('firstName')?.invalid &&
+          addEmployeeForm.get('firstName')?.touched
+        "
+        class="error-message"
+      >
+        <div *ngIf="addEmployeeForm.get('firstName')?.errors?.['required']">
+          First Name is required.
+        </div>
+      </div>
+      <div *ngIf="validationErrors['FirstName']" class="error-message">
+        <div *ngFor="let error of validationErrors['FirstName']">
+          {{ error }}
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="lastName">Last Name</label>
+      <input type="text" id="lastName" formControlName="lastName" required />
+      <div
+        *ngIf="
+          addEmployeeForm.get('lastName')?.invalid &&
+          addEmployeeForm.get('lastName')?.touched
+        "
+        class="error-message"
+      >
+        <div *ngIf="addEmployeeForm.get('lastName')?.errors?.['required']">
+          Last Name is required.
+        </div>
+      </div>
+      <div *ngIf="validationErrors['LastName']" class="error-message">
+        <div *ngFor="let error of validationErrors['LastName']">
+          {{ error }}
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="phoneNumber">Phone Number</label>
+      <input
+        type="text"
+        id="phoneNumber"
+        formControlName="phoneNumber"
+        required
+      />
+      <div
+        *ngIf="
+          addEmployeeForm.get('phoneNumber')?.invalid &&
+          addEmployeeForm.get('phoneNumber')?.touched
+        "
+        class="error-message"
+      >
+        <div *ngIf="addEmployeeForm.get('phoneNumber')?.errors?.['required']">
+          Phone Number is required.
+        </div>
+      </div>
+      <div *ngIf="validationErrors['PhoneNumber']" class="error-message">
+        <div *ngFor="let error of validationErrors['PhoneNumber']">
+          {{ error }}
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="nationalId">National ID</label>
+      <input
+        type="text"
+        id="nationalId"
+        formControlName="nationalId"
+        required
+      />
+      <div
+        *ngIf="
+          addEmployeeForm.get('nationalId')?.invalid &&
+          addEmployeeForm.get('nationalId')?.touched
+        "
+        class="error-message"
+      >
+        <div *ngIf="addEmployeeForm.get('nationalId')?.errors?.['required']">
+          National ID is required.
+        </div>
+      </div>
+      <div *ngIf="validationErrors['NationalId']" class="error-message">
+        <div *ngFor="let error of validationErrors['NationalId']">
+          {{ error }}
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="age">Age</label>
+      <input type="number" id="age" formControlName="age" required />
+      <div
+        *ngIf="
+          addEmployeeForm.get('age')?.invalid &&
+          addEmployeeForm.get('age')?.touched
+        "
+        class="error-message"
+      >
+        <div *ngIf="addEmployeeForm.get('age')?.errors?.['required']">
+          Age is required.
+        </div>
+        <div *ngIf="addEmployeeForm.get('age')?.errors?.['min']">
+          Age must be at least
+          {{ addEmployeeForm.get('age')?.errors?.['min']?.actual }}.
+        </div>
+        <div *ngIf="addEmployeeForm.get('age')?.errors?.['max']">
+          Age cannot be more than
+          {{ addEmployeeForm.get('age')?.errors?.['max']?.actual }}.
+        </div>
+      </div>
+      <div *ngIf="validationErrors['Age']" class="error-message">
+        <div *ngFor="let error of validationErrors['Age']">{{ error }}</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input type="email" id="email" formControlName="email" required />
+      <div
+        *ngIf="
+          addEmployeeForm.get('email')?.invalid &&
+          addEmployeeForm.get('email')?.touched
+        "
+        class="error-message"
+      >
+        <div *ngIf="addEmployeeForm.get('email')?.errors?.['required']">
+          Email is required.
+        </div>
+        <div *ngIf="addEmployeeForm.get('email')?.errors?.['email']">
+          Enter a valid email.
+        </div>
+      </div>
+      <div *ngIf="validationErrors['Email']" class="error-message">
+        <div *ngFor="let error of validationErrors['Email']">{{ error }}</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input
+        type="password"
+        id="password"
+        formControlName="password"
+        required
+      />
+      <div
+        *ngIf="
+          addEmployeeForm.get('password')?.invalid &&
+          addEmployeeForm.get('password')?.touched
+        "
+        class="error-message"
+      >
+        <div *ngIf="addEmployeeForm.get('password')?.errors?.['required']">
+          Password is required.
+        </div>
+      </div>
+      <div *ngIf="validationErrors['Password']" class="error-message">
+        <div *ngFor="let error of validationErrors['Password']">
+          {{ error }}
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="role">Role</label>
+      <select id="role" formControlName="role" required>
+        <option value="Employee">Employee</option>
+        <option value="Admin">Admin</option>
+      </select>
+      <div
+        *ngIf="
+          addEmployeeForm.get('role')?.invalid &&
+          addEmployeeForm.get('role')?.touched
+        "
+        class="error-message"
+      >
+        <div *ngIf="addEmployeeForm.get('role')?.errors?.['required']">
+          Role is required.
+        </div>
+      </div>
+      <div *ngIf="validationErrors['Role']" class="error-message">
+        <div *ngFor="let error of validationErrors['Role']">{{ error }}</div>
+      </div>
+    </div>
+
+    <div *ngIf="errorMessage" class="error-message api-error-message">
+      {{ errorMessage }}
+    </div>
+
+    <!-- This block displays general validation errors from backend, if any are not tied to a specific field -->
+    <div
+      *ngIf="validationErrors && objectKeys(validationErrors).length > 0"
+      class="api-validation-errors"
+    >
+      <p>Validation Errors:</p>
+      <ul>
+        <li *ngFor="let field of objectKeys(validationErrors)">
+          <!-- Only display field-level errors here if they weren't displayed above -->
+          <ng-container
+            *ngIf="
+              !addEmployeeForm.get(field.toLowerCase()) ||
+              (addEmployeeForm.get(field.toLowerCase()) &&
+                !validationErrors[field])
+            "
+          >
+            <strong>{{ field }}:</strong>
+            <ul>
+              <li *ngFor="let error of validationErrors[field]">
+                {{ error }}
+              </li>
+            </ul>
+          </ng-container>
+        </li>
+      </ul>
+    </div>
+
+    <button type="submit" [disabled]="addEmployeeForm.invalid">
+      Add Employee
+    </button>
+  </form>
+</div>

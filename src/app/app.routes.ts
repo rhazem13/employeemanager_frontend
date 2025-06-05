@@ -3,6 +3,8 @@ import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { EmployeeListComponent } from './components/employee-list/employee-list.component';
+import { AddEmployeeComponent } from './components/add-employee/add-employee.component';
+import { EditEmployeeComponent } from './components/edit-employee/edit-employee.component';
 import { MainLayoutComponent } from './layouts/main-layout/main-layout.component';
 import { authGuard } from './guards/auth.guard';
 
@@ -26,6 +28,16 @@ export const routes: Routes = [
       {
         path: 'admin/employees', // Relative path to the parent ('')
         component: EmployeeListComponent,
+        data: { roles: ['Admin'] },
+      },
+      {
+        path: 'admin/add-employee', // Relative path to the parent ('')
+        component: AddEmployeeComponent,
+        data: { roles: ['Admin'] },
+      },
+      {
+        path: 'admin/edit-employee/:id', // Route with employee ID parameter
+        component: EditEmployeeComponent,
         data: { roles: ['Admin'] },
       },
       // Add other protected routes as children here

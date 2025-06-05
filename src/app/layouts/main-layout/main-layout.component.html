@@ -6,6 +6,9 @@
       <li *ngIf="userRole === 'Admin'">
         <a routerLink="/admin/employees">Employee List</a>
       </li>
+      <li *ngIf="userRole === 'Admin'">
+        <a routerLink="/admin/add-employee">Add New Employee</a>
+      </li>
       <!-- Add more navigation links here based on role -->
       <!-- Example: <li *ngIf="userRole === 'Employee'"><a routerLink="/employee/profile">My Profile</a></li> -->
     </ul>
