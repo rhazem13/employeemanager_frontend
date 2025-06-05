@@ -1,111 +1,140 @@
 .add-employee-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: calc(
-    100vh - 60px
-  ); /* Adjust for sidebar/header height if necessary */
-  background-color: #f4f4f4;
-  padding: 20px;
-}
-
-.add-employee-container h2 {
-  color: var(--primary-color);
-  margin-bottom: 20px;
-}
-
-.add-employee-container form {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 2rem 3rem 2rem 2rem;
   background-color: #fff;
-  padding: 30px;
   border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 400px;
-}
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
-.form-group {
-  margin-bottom: 15px;
-}
+  h2 {
+    margin-bottom: 2rem;
+    color: #333;
+    text-align: center;
+  }
 
-.form-group label {
-  display: block;
-  margin-bottom: 5px;
-  font-weight: bold;
-}
+  .form-group {
+    margin-bottom: 1.5rem;
 
-.form-group input[type="text"],
-.form-group input[type="email"],
-.form-group input[type="password"],
-.form-group input[type="number"],
-.form-group select {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box; /* Include padding and border in element's total width and height */
-}
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #555;
+      font-weight: 500;
+    }
 
-.error-message {
-  color: #e53935; /* Material Design Red 600 */
-  font-size: 0.9em;
-  margin-top: 5px;
-}
+    input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 1rem;
+      transition: border-color 0.3s ease;
 
-.api-validation-errors {
-  color: #e53935; /* Material Design Red 600 */
-  font-size: 0.9em;
-  margin-top: 15px;
-  border: 1px solid #e53935;
-  padding: 10px;
-  border-radius: 4px;
-  background-color: #ffebee; /* Light red background */
-}
+      &:focus {
+        outline: none;
+        border-color: #007bff;
+        box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+      }
 
-.api-validation-errors ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
+      &.ng-invalid.ng-touched {
+        border-color: #dc3545;
+      }
 
-.api-validation-errors li {
-  margin-bottom: 5px;
-}
+      &[type="tel"] {
+        // Ensure phone input matches other inputs
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 1rem;
+      }
+    }
 
-.api-validation-errors li:last-child {
-  margin-bottom: 0;
-}
+    .error-message {
+      color: #dc3545;
+      font-size: 0.875rem;
+      margin-top: 0.25rem;
+    }
+  }
 
-.api-validation-errors strong {
-  display: block;
-  margin-bottom: 2px;
-}
+  .signature-input {
+    margin-bottom: 1rem;
+  }
 
-button[type="submit"] {
-  background-color: var(--primary-color);
-  color: white;
-  padding: 10px 15px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 1em;
-  width: 100%;
-  transition: background-color 0.3s ease;
-}
+  .signature-preview {
+    margin-top: 1rem;
+    text-align: center;
 
-button[type="submit"]:disabled {
-  background-color: #cccccc;
-  cursor: not-allowed;
-}
+    img {
+      max-width: 100%;
+      max-height: 200px;
+      margin-bottom: 1rem;
+    }
 
-button[type="submit"]:hover:not(:disabled) {
-  background-color: #2a614b; /* A slightly darker shade of the primary color */
-}
+    .clear-signature {
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
 
-/* Responsive adjustments */
-@media (max-width: 600px) {
-  .add-employee-container form {
-    padding: 20px;
+      &:hover {
+        background-color: #c82333;
+      }
+    }
+  }
+
+  button[type="submit"] {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: #0056b3;
+    }
+
+    &:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+  }
+
+  .api-error-message {
+    margin-bottom: 1rem;
+    padding: 0.75rem;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    border-radius: 4px;
+    color: #721c24;
+  }
+
+  .api-validation-errors {
+    margin-bottom: 1rem;
+    padding: 0.75rem;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    border-radius: 4px;
+    color: #721c24;
+
+    p {
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 1.5rem;
+
+      li {
+        margin-bottom: 0.25rem;
+      }
+    }
   }
 }
-

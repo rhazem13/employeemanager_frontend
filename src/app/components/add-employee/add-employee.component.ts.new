@@ -35,61 +35,20 @@ export class AddEmployeeComponent implements OnInit {
     this.addEmployeeForm = this.fb.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
-      phoneNumber: [
-        '',
-        [
-          Validators.required,
-          Validators.pattern(/^(\+?\d{1,3})?[-. ]?\d{6,14}$/), // International phone format
-        ],
-      ],
-      nationalId: [
-        '',
-        [
-          Validators.required,
-          Validators.pattern(/^[0-9]{14}$/), // 14-digit national ID
-        ],
-      ],
+      phoneNumber: ['', Validators.required],
+      nationalId: ['', Validators.required],
       age: [null, [Validators.required, Validators.min(18)]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       signature: [''], // Optional signature field
-      role: ['Employee'], // Hidden field, always set to 'Employee'
+      role: ['Employee'] // Hidden field, always set to 'Employee'
     });
-  }
-
-  // Helper method for phone number validation messages
-  getPhoneErrorMessage(): string {
-    const control = this.addEmployeeForm.get('phoneNumber');
-    if (control?.errors) {
-      if (control.errors['required']) {
-        return 'Phone number is required.';
-      }
-      if (control.errors['pattern']) {
-        return 'Please enter a valid phone number.';
-      }
-    }
-    return '';
-  }
-
-  // Helper method for national ID validation messages
-  getNationalIdErrorMessage(): string {
-    const control = this.addEmployeeForm.get('nationalId');
-    if (control?.errors) {
-      if (control.errors['required']) {
-        return 'National ID is required.';
-      }
-      if (control.errors['pattern']) {
-        return 'National ID must be exactly 14 digits.';
-      }
-    }
-    return '';
   }
 
   onSignatureChange(event: Event): void {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (file) {
-      if (file.size > 5000000) {
-        // 5MB limit
+      if (file.size > 5000000) { // 5MB limit
         this.snackBar.open('Signature image must be less than 5MB', 'Close', {
           duration: 3000,
           horizontalPosition: 'end',
@@ -102,7 +61,7 @@ export class AddEmployeeComponent implements OnInit {
       reader.onload = (e: any) => {
         this.signaturePreview = e.target.result;
         this.addEmployeeForm.patchValue({
-          signature: e.target.result,
+          signature: e.target.result
         });
       };
       reader.readAsDataURL(file);
@@ -112,7 +71,7 @@ export class AddEmployeeComponent implements OnInit {
   clearSignature(): void {
     this.signaturePreview = null;
     this.addEmployeeForm.patchValue({
-      signature: '',
+      signature: ''
     });
   }
 
