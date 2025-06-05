@@ -1,0 +1,105 @@
+<div class="dashboard-container">
+  @if (isLoading) {
+  <div class="loading-spinner">
+    <mat-spinner diameter="40"></mat-spinner>
+  </div>
+  }
+
+  <!-- Today's Attendance Card -->
+  <mat-card class="attendance-card">
+    <mat-card-header>
+      <mat-card-title>Today's Attendance</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      @if (!todayAttendance) {
+      <div class="no-attendance">
+        <p>No attendance recorded for today</p>
+        <button mat-raised-button color="primary" (click)="checkIn()">
+          Check In
+        </button>
+      </div>
+      } @else {
+      <div class="attendance-info">
+        <p>Check-in Time: {{ formatTime(todayAttendance.checkInTime) }}</p>
+        @if (todayAttendance.checkOutTime) {
+        <p>Check-out Time: {{ formatTime(todayAttendance.checkOutTime) }}</p>
+        <p>Hours Worked: {{ todayAttendance.hoursWorked.toFixed(2) }}</p>
+        } @else {
+        <button mat-raised-button color="accent" (click)="checkOut()">
+          Check Out
+        </button>
+        }
+      </div>
+      }
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Weekly Summary Card -->
+  <mat-card class="summary-card">
+    <mat-card-header>
+      <mat-card-title>Weekly Summary</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      @if (weeklySummary) {
+      <div class="summary-info">
+        <p>Total Hours: {{ weeklySummary.totalHours.toFixed(2) }}</p>
+        <p>
+          Average Hours/Day: {{ weeklySummary.averageHoursPerDay.toFixed(2) }}
+        </p>
+        <p>Days Present: {{ weeklySummary.daysPresent }}</p>
+      </div>
+      } @else {
+      <p>No summary available for this week</p>
+      }
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Recent Attendance Table -->
+  <mat-card class="recent-attendance-card">
+    <mat-card-header>
+      <mat-card-title>Recent Attendance</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      @if (recentAttendance.length > 0) {
+      <table mat-table [dataSource]="recentAttendance">
+        <!-- Date Column -->
+        <ng-container matColumnDef="date">
+          <th mat-header-cell *matHeaderCellDef>Date</th>
+          <td mat-cell *matCellDef="let record">
+            {{ formatDate(record.checkInTime) }}
+          </td>
+        </ng-container>
+
+        <!-- Check In Column -->
+        <ng-container matColumnDef="checkIn">
+          <th mat-header-cell *matHeaderCellDef>Check In</th>
+          <td mat-cell *matCellDef="let record">
+            {{ formatTime(record.checkInTime) }}
+          </td>
+        </ng-container>
+
+        <!-- Check Out Column -->
+        <ng-container matColumnDef="checkOut">
+          <th mat-header-cell *matHeaderCellDef>Check Out</th>
+          <td mat-cell *matCellDef="let record">
+            {{ record.checkOutTime ? formatTime(record.checkOutTime) : "-" }}
+          </td>
+        </ng-container>
+
+        <!-- Hours Worked Column -->
+        <ng-container matColumnDef="hoursWorked">
+          <th mat-header-cell *matHeaderCellDef>Hours Worked</th>
+          <td mat-cell *matCellDef="let record">
+            {{ record.hoursWorked ? record.hoursWorked.toFixed(2) : "-" }}
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+      } @else {
+      <p>No recent attendance records found</p>
+      }
+    </mat-card-content>
+  </mat-card>
+</div>

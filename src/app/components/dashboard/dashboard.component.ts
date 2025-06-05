@@ -17,6 +17,10 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.userRole = this.authService.getUserRole();
+    // Redirect based on role
+    if (this.userRole === 'Employee') {
+      this.router.navigate(['/employee/dashboard']);
+    }
   }
 
   logout(): void {

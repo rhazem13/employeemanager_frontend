@@ -3,18 +3,20 @@
     <h3>Navigation</h3>
     <ul>
       <li><a routerLink="/dashboard">Dashboard</a></li>
+      <!-- Admin Links -->
       <li *ngIf="userRole === 'Admin'">
         <a routerLink="/admin/employees">Employee List</a>
       </li>
       <li *ngIf="userRole === 'Admin'">
         <a routerLink="/admin/add-employee">Add New Employee</a>
       </li>
-      <li>
-          <a routerLink="/admin/attendance" routerLinkActive="active">
-            <i class="fas fa-calendar-check"></i>
-            <span>Attendance</span>
-          </a>
-        </li>
+      <li *ngIf="userRole === 'Admin'">
+        <a routerLink="/admin/attendance">Attendance Management</a>
+      </li>
+      <!-- Employee Links -->
+      <li *ngIf="userRole === 'Employee'">
+        <a routerLink="/employee/dashboard">My Dashboard</a>
+      </li>
       <!-- Add more navigation links here based on role -->
       <!-- Example: <li *ngIf="userRole === 'Employee'"><a routerLink="/employee/profile">My Profile</a></li> -->
     </ul>

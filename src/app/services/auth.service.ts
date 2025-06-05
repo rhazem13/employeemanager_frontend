@@ -11,19 +11,24 @@ export class AuthService {
   private apiUrl = environment.apiUrl;
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
   private userRoleSubject = new BehaviorSubject<string>('');
+  private employeeIdSubject = new BehaviorSubject<string | null>(null);
 
   constructor(private http: HttpClient) {
     // Check if user is already logged in
     const token = localStorage.getItem('jwt_token');
     if (token) {
       this.isAuthenticatedSubject.next(true);
-      // Decode token to get user role
+      // Decode token to get user role and employeeId
       try {
         const payload = JSON.parse(atob(token.split('.')[1]));
         console.log('Token payload:', payload);
         if (payload.role) {
           this.userRoleSubject.next(payload.role);
           localStorage.setItem('user_role', payload.role); // Backup role in localStorage
+        }
+        if (payload.employeeId) {
+          this.employeeIdSubject.next(payload.employeeId.toString());
+          localStorage.setItem('employee_id', payload.employeeId.toString()); // Backup employeeId in localStorage
         }
       } catch (error) {
         console.error('Error decoding token:', error);
@@ -38,12 +43,16 @@ export class AuthService {
         if (response && response.token) {
           localStorage.setItem('jwt_token', response.token);
           this.isAuthenticatedSubject.next(true);
-          // Decode token to get user role
+          // Decode token to get user role and employeeId
           const payload = JSON.parse(atob(response.token.split('.')[1]));
           console.log('Token payload:', payload);
           if (payload.role) {
             this.userRoleSubject.next(payload.role);
-            localStorage.setItem('user_role', payload.role); // Backup role in localStorage
+            localStorage.setItem('user_role', payload.role);
+          }
+          if (payload.employeeId) {
+            this.employeeIdSubject.next(payload.employeeId.toString());
+            localStorage.setItem('employee_id', payload.employeeId.toString());
           }
         }
       }),
@@ -88,11 +97,19 @@ export class AuthService {
     return this.userRoleSubject.asObservable();
   }
 
+  
+
+  getEmployeeIdObservable(): Observable<string | null> {
+    return this.employeeIdSubject.asObservable();
+  }
+
   logout(): void {
     localStorage.removeItem('jwt_token');
     localStorage.removeItem('user_role');
+    localStorage.removeItem('employee_id');
     this.isAuthenticatedSubject.next(false);
     this.userRoleSubject.next('');
+    this.employeeIdSubject.next(null);
   }
 
   isAuthenticated(): Observable<boolean> {

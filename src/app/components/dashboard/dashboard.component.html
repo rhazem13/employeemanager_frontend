@@ -1,32 +1,36 @@
 <div class="dashboard-container">
-  <h2>Welcome to the Dashboard</h2>
+  <h2>Admin Dashboard</h2>
 
-  <div *ngIf="userRole === 'Admin'" class="admin-dashboard">
-    <h3>Admin Dashboard</h3>
-    <p>
-      Welcome, Admin! Here you will find your administration tools and reports.
-    </p>
-    <!-- Admin specific content/links will go here -->
-    <p>
-      <a href="javascript:void(0)" (click)="goToEmployeeList()"
-        >View Employee List</a
-      >
-    </p>
+  <div class="admin-dashboard">
+    <div class="dashboard-stats">
+      <h3>Quick Stats</h3>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <h4>Total Employees</h4>
+          <p>Loading...</p>
+        </div>
+        <div class="stat-card">
+          <h4>Present Today</h4>
+          <p>Loading...</p>
+        </div>
+        <div class="stat-card">
+          <h4>On Leave</h4>
+          <p>Loading...</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="quick-actions">
+      <h3>Quick Actions</h3>
+      <div class="actions-grid">
+        <button (click)="goToEmployeeList()">View Employee List</button>
+        <a routerLink="/admin/add-employee">
+          <button>Add New Employee</button>
+        </a>
+        <a routerLink="/admin/attendance">
+          <button>Manage Attendance</button>
+        </a>
+      </div>
+    </div>
   </div>
-
-  <div *ngIf="userRole === 'Employee'" class="employee-dashboard">
-    <h3>Employee Dashboard</h3>
-    <p>
-      Welcome, Employee! Here you can view your profile and attendance
-      information.
-    </p>
-    <!-- Employee specific content/links will go here -->
-  </div>
-
-  <div *ngIf="!userRole">
-    <p>Loading user information or role not available...</p>
-  </div>
-
-  <!-- Add a logout button -->
-  <button (click)="logout()">Logout</button>
 </div>

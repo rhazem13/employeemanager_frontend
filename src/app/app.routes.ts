@@ -72,14 +72,30 @@ export const routes: Routes = [
           },
         ],
       },
-      // Add other protected routes as children here
-      // For example: { path: 'employee/profile', component: EmployeeProfileComponent, data: { roles: ['Employee'] } }
-
-      // Redirect to dashboard by default when accessing the protected area base path ('/')
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      // Employee routes
+      {
+        path: 'employee',
+        canActivate: [authGuard],
+        data: { roles: ['Employee'] },
+        children: [
+          {
+            path: 'dashboard',
+            loadComponent: () =>
+              import(
+                './components/employee-dashboard/employee-dashboard.component'
+              ).then((m) => m.EmployeeDashboardComponent),
+          },
+        ],
+      },
+      // Redirect to appropriate dashboard based on role
+      {
+        path: '',
+        redirectTo: 'dashboard',
+        pathMatch: 'full',
+      },
     ],
   },
 
-  // Redirect any unknown paths to login (or a 404 page)
+  // Redirect any unknown paths to login
   { path: '**', redirectTo: 'login' },
 ];

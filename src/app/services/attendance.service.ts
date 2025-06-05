@@ -10,6 +10,8 @@ export interface DailyRecord {
   firstName: string;
   lastName: string;
   checkInTime: string;
+  checkOutTime?: string;
+  hoursWorked?: number;
 }
 
 export interface WeeklySummary {
@@ -19,11 +21,22 @@ export interface WeeklySummary {
   weekStart: string;
   checkInCount: number;
   hoursWorked: number;
+  daysPresent: number;
+  totalHours: number;
+  averageHoursPerDay: number;
 }
 
 export interface AttendanceResponse {
   dailyRecords: DailyRecord[];
   weeklySummaries: WeeklySummary[];
+}
+
+export interface CheckInResponse {
+  message: string;
+}
+
+export interface CheckOutResponse {
+  message: string;
 }
 
 @Injectable({
@@ -34,18 +47,21 @@ export class AttendanceService {
 
   constructor(private http: HttpClient, private authService: AuthService) {}
 
+  private getHeaders(): HttpHeaders {
+    const token = this.authService.getToken();
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('Authorization', `Bearer ${token}`);
+    }
+    return headers;
+  }
+
+  // For admin view - gets attendance for all or specific employee
   getAttendanceTracking(
     startDate: Date,
     endDate: Date,
     employeeId?: number
   ): Observable<AttendanceResponse> {
-    const token = this.authService.getToken();
-    let headers = new HttpHeaders();
-
-    if (token) {
-      headers = headers.set('Authorization', `Bearer ${token}`);
-    }
-
     let params = new HttpParams()
       .set('StartDate', startDate.toISOString())
       .set('EndDate', endDate.toISOString());
@@ -56,7 +72,40 @@ export class AttendanceService {
 
     return this.http.get<AttendanceResponse>(
       `${this.apiUrl}/Attendance/tracking`,
-      { headers, params }
+      { headers: this.getHeaders(), params }
+    );
+  }
+
+  // For employee view - gets attendance history for the authenticated employee
+  getAttendanceHistory(
+    startDate: Date,
+    endDate: Date
+  ): Observable<AttendanceResponse> {
+    const params = new HttpParams()
+      .set('StartDate', startDate.toISOString())
+      .set('EndDate', endDate.toISOString());
+
+    return this.http.get<AttendanceResponse>(
+      `${this.apiUrl}/Attendance/history`,
+      { headers: this.getHeaders(), params }
+    );
+  }
+
+  recordCheckIn(): Observable<CheckInResponse> {
+    const checkInTime = new Date().toISOString();
+    return this.http.post<CheckInResponse>(
+      `${this.apiUrl}/Attendance/check-in`,
+      { checkInTime },
+      { headers: this.getHeaders() }
+    );
+  }
+
+  recordCheckOut(): Observable<CheckOutResponse> {
+    const checkOutTime = new Date().toISOString();
+    return this.http.post<CheckOutResponse>(
+      `${this.apiUrl}/Attendance/check-out`,
+      { checkOutTime },
+      { headers: this.getHeaders() }
     );
   }
 }

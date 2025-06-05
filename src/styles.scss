@@ -1,4 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
+@import "@angular/material/prebuilt-themes/indigo-pink.css";
 
 :root {
   --primary-color: #347a5b;
@@ -28,4 +29,25 @@ a {
 
 a:hover {
   text-decoration: underline;
+}
+
+/* Snackbar styles */
+.success-snackbar {
+  background: #4caf50;
+  color: white;
+}
+
+.error-snackbar {
+  background: #f44336;
+  color: white;
+}
+
+.success-snackbar .mdc-snackbar__surface,
+.error-snackbar .mdc-snackbar__surface {
+  background-color: inherit !important;
+}
+
+.success-snackbar .mat-simple-snackbar-action,
+.error-snackbar .mat-simple-snackbar-action {
+  color: white;
 }
