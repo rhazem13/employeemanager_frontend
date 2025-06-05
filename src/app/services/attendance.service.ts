@@ -55,6 +55,17 @@ export interface AttendanceHistoryResponse {
   weeklySummaries: WeeklySummary[];
 }
 
+export interface WeeklyAttendanceResponse {
+  checkIns: {
+    id: number;
+    checkInTime: string;
+  }[];
+  weeklySummaries: {
+    weekStart: string;
+    checkInCount: number;
+  }[];
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -153,5 +164,22 @@ export class AttendanceService {
           );
         })
       );
+  }
+
+  getWeeklyAttendanceHistory(
+    startDate: Date,
+    endDate: Date
+  ): Observable<WeeklyAttendanceResponse> {
+    const params = new HttpParams()
+      .set('StartDate', startDate.toISOString())
+      .set('EndDate', endDate.toISOString());
+
+    return this.http.get<WeeklyAttendanceResponse>(
+      `${this.apiUrl}/Attendance/history`,
+      {
+        headers: this.getHeaders(),
+        params,
+      }
+    );
   }
 }

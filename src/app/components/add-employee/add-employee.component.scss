@@ -93,7 +93,7 @@
         }
 
         // Match canvas and upload container styles
-        .signature-input {
+  .signature-input {
           border: 1px solid #ddd;
           border-radius: 4px;
           padding: 1rem;
@@ -102,7 +102,7 @@
           canvas {
             border: 1px solid #ddd;
             border-radius: 4px;
-          }
+    }
 
           .canvas-actions button {
             margin-top: 0.5rem;
@@ -112,12 +112,12 @@
             border: 2px dashed #ddd;
             padding: 1rem;
             text-align: center;
-            border-radius: 4px;
-            cursor: pointer;
+      border-radius: 4px;
+      cursor: pointer;
 
-            &:hover {
+      &:hover {
               border-color: var(--primary-color);
-            }
+    }
           }
         }
       }
