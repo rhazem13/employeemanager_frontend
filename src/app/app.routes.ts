@@ -10,8 +10,20 @@ import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   // Public routes
-  { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterComponent },
+  {
+    path: 'login',
+    loadComponent: () =>
+      import('./components/login/login.component').then(
+        (m) => m.LoginComponent
+      ),
+  },
+  {
+    path: 'register',
+    loadComponent: () =>
+      import('./components/register/register.component').then(
+        (m) => m.RegisterComponent
+      ),
+  },
 
   // Protected routes using the main layout
   {
@@ -26,19 +38,39 @@ export const routes: Routes = [
         data: { roles: ['Admin', 'Employee'] },
       },
       {
-        path: 'admin/employees', // Relative path to the parent ('')
-        component: EmployeeListComponent,
+        path: 'admin',
+        canActivate: [authGuard],
         data: { roles: ['Admin'] },
-      },
-      {
-        path: 'admin/add-employee', // Relative path to the parent ('')
-        component: AddEmployeeComponent,
-        data: { roles: ['Admin'] },
-      },
-      {
-        path: 'admin/edit-employee/:id', // Route with employee ID parameter
-        component: EditEmployeeComponent,
-        data: { roles: ['Admin'] },
+        children: [
+          {
+            path: 'employees',
+            loadComponent: () =>
+              import('./components/employee-list/employee-list.component').then(
+                (m) => m.EmployeeListComponent
+              ),
+          },
+          {
+            path: 'add-employee',
+            loadComponent: () =>
+              import('./components/add-employee/add-employee.component').then(
+                (m) => m.AddEmployeeComponent
+              ),
+          },
+          {
+            path: 'employees/edit/:id',
+            loadComponent: () =>
+              import('./components/edit-employee/edit-employee.component').then(
+                (m) => m.EditEmployeeComponent
+              ),
+          },
+          {
+            path: 'attendance',
+            loadComponent: () =>
+              import(
+                './components/attendance-management/attendance-management.component'
+              ).then((m) => m.AttendanceManagementComponent),
+          },
+        ],
       },
       // Add other protected routes as children here
       // For example: { path: 'employee/profile', component: EmployeeProfileComponent, data: { roles: ['Employee'] } }

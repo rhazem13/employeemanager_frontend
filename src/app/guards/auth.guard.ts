@@ -9,7 +9,7 @@ export const authGuard: CanActivateFn = (route, state) => {
   const requiredRoles = route.data['roles'] as Array<string>;
 
   const token = authService.getToken();
-  const userRole = authService.getRole();
+  const userRole = authService.getUserRole();
 
   if (token) {
     // User is authenticated, now check roles if required

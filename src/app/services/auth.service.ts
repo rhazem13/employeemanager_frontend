@@ -1,23 +1,50 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = 'https://localhost:7203/api/Auth';
+  private apiUrl = environment.apiUrl;
+  private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
+  private userRoleSubject = new BehaviorSubject<string>('');
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    // Check if user is already logged in
+    const token = localStorage.getItem('jwt_token');
+    if (token) {
+      this.isAuthenticatedSubject.next(true);
+      // Decode token to get user role
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        console.log('Token payload:', payload);
+        if (payload.role) {
+          this.userRoleSubject.next(payload.role);
+          localStorage.setItem('user_role', payload.role); // Backup role in localStorage
+        }
+      } catch (error) {
+        console.error('Error decoding token:', error);
+        this.logout();
+      }
+    }
+  }
 
   login(credentials: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/login`, credentials).pipe(
+    return this.http.post(`${this.apiUrl}/auth/login`, credentials).pipe(
       tap((response: any) => {
         if (response && response.token) {
           localStorage.setItem('jwt_token', response.token);
-          localStorage.setItem('user_role', response.role);
-          localStorage.setItem('employee_id', response.employeeId);
+          this.isAuthenticatedSubject.next(true);
+          // Decode token to get user role
+          const payload = JSON.parse(atob(response.token.split('.')[1]));
+          console.log('Token payload:', payload);
+          if (payload.role) {
+            this.userRoleSubject.next(payload.role);
+            localStorage.setItem('user_role', payload.role); // Backup role in localStorage
+          }
         }
       }),
       catchError(this.handleError)
@@ -26,7 +53,7 @@ export class AuthService {
 
   register(userData: any): Observable<any> {
     return this.http
-      .post(`${this.apiUrl}/register`, userData)
+      .post(`${this.apiUrl}/auth/register`, userData)
       .pipe(catchError(this.handleError));
   }
 
@@ -34,47 +61,53 @@ export class AuthService {
     return localStorage.getItem('jwt_token');
   }
 
-  getRole(): string | null {
-    return localStorage.getItem('user_role');
+  getUserRole(): string {
+    // First try to get from BehaviorSubject
+    const role = this.userRoleSubject.value;
+    if (role) {
+      return role;
+    }
+    // If not in BehaviorSubject, try to get from token
+    const token = this.getToken();
+    if (token) {
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        if (payload.role) {
+          this.userRoleSubject.next(payload.role);
+          return payload.role;
+        }
+      } catch (error) {
+        console.error('Error decoding token:', error);
+      }
+    }
+    // If all else fails, try localStorage backup
+    return localStorage.getItem('user_role') || '';
   }
 
-  getEmployeeId(): string | null {
-    return localStorage.getItem('employee_id');
+  getUserRoleObservable(): Observable<string> {
+    return this.userRoleSubject.asObservable();
   }
 
   logout(): void {
     localStorage.removeItem('jwt_token');
     localStorage.removeItem('user_role');
-    localStorage.removeItem('employee_id');
+    this.isAuthenticatedSubject.next(false);
+    this.userRoleSubject.next('');
   }
 
-  private handleError(error: HttpErrorResponse) {
-    let errorMessage = 'An unknown error occurred!';
-    let validationErrors = null;
+  isAuthenticated(): Observable<boolean> {
+    return this.isAuthenticatedSubject.asObservable();
+  }
 
+  private handleError(error: any) {
+    let errorMessage = 'An error occurred';
     if (error.error instanceof ErrorEvent) {
-      // Client-side errors
-      errorMessage = `Error: ${error.error.message}`;
+      // Client-side error
+      errorMessage = error.error.message;
     } else {
-      // Server-side errors
-      if (error.status === 400 && error.error && error.error.errors) {
-        // Backend validation errors
-        validationErrors = error.error.errors;
-        errorMessage = error.error.title || 'Validation failed';
-        console.error('Validation errors:', validationErrors);
-      } else if (error.status === 400 && error.error && error.error.message) {
-        // Specific backend message for 400 (like login)
-        errorMessage = `Error: ${error.error.message}`;
-      } else {
-        errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
-      }
+      // Server-side error
+      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
     }
-
-    console.error(errorMessage);
-    // Throw an object that includes both the general message and specific validation errors
-    return throwError(() => ({
-      message: errorMessage,
-      validationErrors: validationErrors,
-    }));
+    return throwError(() => errorMessage);
   }
 }

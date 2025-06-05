@@ -1,0 +1,151 @@
+<div class="attendance-container">
+  <h2>Attendance Management</h2>
+
+  <mat-card class="filter-card">
+    <mat-card-content>
+      <div class="filter-row">
+        <mat-form-field>
+          <mat-label>Start Date</mat-label>
+          <input
+            matInput
+            [matDatepicker]="startPicker"
+            [(ngModel)]="startDate"
+            (dateChange)="onDateRangeChange()"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="startPicker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #startPicker></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>End Date</mat-label>
+          <input
+            matInput
+            [matDatepicker]="endPicker"
+            [(ngModel)]="endDate"
+            (dateChange)="onDateRangeChange()"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="endPicker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #endPicker></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Employee</mat-label>
+          <mat-select
+            [(ngModel)]="selectedEmployeeId"
+            (selectionChange)="onEmployeeChange()"
+          >
+            <mat-option [value]="undefined">All Employees</mat-option>
+            <mat-option
+              *ngFor="let employee of employees"
+              [value]="employee.employeeId"
+            >
+              {{ employee.firstName }} {{ employee.lastName }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <div class="loading-spinner" *ngIf="isLoading">
+    <mat-spinner diameter="40"></mat-spinner>
+  </div>
+
+  <div [class.content-loading]="isLoading">
+    <mat-card class="data-card">
+      <mat-card-header>
+        <mat-card-title>Daily Attendance Records</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <table mat-table [dataSource]="dailyRecords" class="mat-elevation-z8">
+          <ng-container matColumnDef="employeeId">
+            <th mat-header-cell *matHeaderCellDef>ID</th>
+            <td mat-cell *matCellDef="let record">{{ record.employeeId }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef>Name</th>
+            <td mat-cell *matCellDef="let record">
+              {{ record.firstName }} {{ record.lastName }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="checkInTime">
+            <th mat-header-cell *matHeaderCellDef>Check-in Time</th>
+            <td mat-cell *matCellDef="let record">
+              {{ formatTime(record.checkInTime) }}
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+          <!-- No data message -->
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="3">No attendance records found</td>
+          </tr>
+        </table>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="data-card">
+      <mat-card-header>
+        <mat-card-title>Weekly Summary</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <table
+          mat-table
+          [dataSource]="weeklySummaries"
+          class="mat-elevation-z8"
+        >
+          <ng-container matColumnDef="employeeId">
+            <th mat-header-cell *matHeaderCellDef>ID</th>
+            <td mat-cell *matCellDef="let summary">{{ summary.employeeId }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef>Name</th>
+            <td mat-cell *matCellDef="let summary">
+              {{ summary.firstName }} {{ summary.lastName }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="weekStart">
+            <th mat-header-cell *matHeaderCellDef>Week Starting</th>
+            <td mat-cell *matCellDef="let summary">
+              {{ formatDate(summary.weekStart) }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="checkInCount">
+            <th mat-header-cell *matHeaderCellDef>Days Present</th>
+            <td mat-cell *matCellDef="let summary">
+              {{ summary.checkInCount }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="hoursWorked">
+            <th mat-header-cell *matHeaderCellDef>Hours Worked</th>
+            <td mat-cell *matCellDef="let summary">
+              {{ summary.hoursWorked }}
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="weeklyColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: weeklyColumns"></tr>
+
+          <!-- No data message -->
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="5">No weekly summary found</td>
+          </tr>
+        </table>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

@@ -16,7 +16,7 @@ export class DashboardComponent implements OnInit {
   constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {
-    this.userRole = this.authService.getRole();
+    this.userRole = this.authService.getUserRole();
   }
 
   logout(): void {
