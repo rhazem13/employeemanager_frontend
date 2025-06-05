@@ -1,5 +1,21 @@
-<div class="main-layout-container">
-  <div class="sidebar">
+<div class="main-layout-container" [class.mobile-menu-open]="isMobileMenuOpen">
+  <!-- Mobile Menu Button -->
+  <button
+    class="mobile-menu-button"
+    *ngIf="isMobileView"
+    (click)="toggleMobileMenu()"
+  >
+    <mat-icon>{{ isMobileMenuOpen ? "close" : "menu" }}</mat-icon>
+  </button>
+
+  <!-- Overlay for mobile menu -->
+  <div
+    class="mobile-overlay"
+    *ngIf="isMobileView && isMobileMenuOpen"
+    (click)="closeMobileMenu()"
+  ></div>
+
+  <div class="sidebar" [class.mobile-open]="isMobileMenuOpen">
     <h3>
       <strong><em>Employee Manager</em></strong>
     </h3>
@@ -9,41 +25,65 @@
           routerLink="/dashboard"
           routerLinkActive="active"
           [routerLinkActiveOptions]="{ exact: true }"
-          >Dashboard</a
+          (click)="closeMobileMenu()"
         >
+          <mat-icon>dashboard</mat-icon>
+          <span>Dashboard</span>
+        </a>
       </li>
       <!-- Admin Links -->
       <li *ngIf="userRole === 'Admin'">
-        <a routerLink="/admin/employees" routerLinkActive="active"
-          >Employee List</a
+        <a
+          routerLink="/admin/employees"
+          routerLinkActive="active"
+          (click)="closeMobileMenu()"
         >
+          <mat-icon>people</mat-icon>
+          <span>Employee List</span>
+        </a>
       </li>
       <li *ngIf="userRole === 'Admin'">
-        <a routerLink="/admin/add-employee" routerLinkActive="active"
-          >Add New Employee</a
+        <a
+          routerLink="/admin/add-employee"
+          routerLinkActive="active"
+          (click)="closeMobileMenu()"
         >
+          <mat-icon>person_add</mat-icon>
+          <span>Add New Employee</span>
+        </a>
       </li>
       <li *ngIf="userRole === 'Admin'">
-        <a routerLink="/admin/attendance" routerLinkActive="active"
-          >Attendance Management</a
+        <a
+          routerLink="/admin/attendance"
+          routerLinkActive="active"
+          (click)="closeMobileMenu()"
         >
+          <mat-icon>event_note</mat-icon>
+          <span>Attendance Management</span>
+        </a>
       </li>
       <!-- Employee Links -->
       <li *ngIf="userRole === 'Employee'">
-        <a routerLink="/employee/dashboard" routerLinkActive="active"
-          >My Dashboard</a
+        <a
+          routerLink="/employee/dashboard"
+          routerLinkActive="active"
+          (click)="closeMobileMenu()"
         >
+          <mat-icon>work</mat-icon>
+          <span>My Dashboard</span>
+        </a>
       </li>
-      <!-- Add more navigation links here based on role -->
-      <!-- Example: <li *ngIf="userRole === 'Employee'"><a routerLink="/employee/profile">My Profile</a></li> -->
     </ul>
 
     <div class="logout-button">
-      <button (click)="logout()">Logout</button>
+      <button (click)="logout()">
+        <mat-icon>logout</mat-icon>
+        <span>Logout</span>
+      </button>
     </div>
   </div>
-  <div class="main-content">
-    <!-- Routed components will be displayed here -->
+
+  <div class="main-content" [class.mobile-menu-open]="isMobileMenuOpen">
     <router-outlet></router-outlet>
   </div>
 </div>
