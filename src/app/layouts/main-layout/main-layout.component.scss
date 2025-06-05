@@ -1,0 +1,91 @@
+.main-layout-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 250px; /* Adjust sidebar width as needed */
+  background-color: var(
+    --primary-color
+  ); /* Use primary color for sidebar background */
+  color: white;
+  padding: 20px;
+  box-sizing: border-box;
+  flex-shrink: 0; /* Prevent sidebar from shrinking */
+
+  h3 {
+    color: #fff; /* White color for sidebar heading */
+    margin-top: 0;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3); /* Subtle separator */
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    li {
+      margin-bottom: 10px;
+
+      a {
+        color: white;
+        text-decoration: none;
+        display: block;
+        padding: 8px 0;
+        transition: background-color 0.3s ease;
+        border-radius: 4px;
+
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.1); /* Subtle hover effect */
+        }
+
+        &.active {
+          font-weight: bold;
+          background-color: rgba(
+            255,
+            255,
+            255,
+            0.2
+          ); /* Highlight active link */
+        }
+      }
+    }
+  }
+}
+
+.main-content {
+  flex-grow: 1; /* Allow main content to take up remaining space */
+  padding: 20px;
+  box-sizing: border-box;
+  overflow-y: auto; /* Add scroll if content overflows */
+  background-color: #f4f4f4; /* Match body background or use a light color */
+}
+
+/* Basic responsiveness */
+@media (max-width: 768px) {
+  .main-layout-container {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    height: auto; /* Allow sidebar height to adjust */
+    padding: 10px 20px; /* Adjust padding for smaller screens */
+
+    ul {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px; /* Add space between horizontal links */
+
+      li {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  .main-content {
+    padding: 15px;
+  }
+}

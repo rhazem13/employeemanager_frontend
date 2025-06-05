@@ -7,7 +7,11 @@
       Welcome, Admin! Here you will find your administration tools and reports.
     </p>
     <!-- Admin specific content/links will go here -->
-    <p><a routerLink="/admin/employees">View Employee List</a></p>
+    <p>
+      <a href="javascript:void(0)" (click)="goToEmployeeList()"
+        >View Employee List</a
+      >
+    </p>
   </div>
 
   <div *ngIf="userRole === 'Employee'" class="employee-dashboard">

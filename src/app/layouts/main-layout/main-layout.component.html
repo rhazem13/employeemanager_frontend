@@ -1,0 +1,21 @@
+<div class="main-layout-container">
+  <div class="sidebar">
+    <h3>Navigation</h3>
+    <ul>
+      <li><a routerLink="/dashboard">Dashboard</a></li>
+      <li *ngIf="userRole === 'Admin'">
+        <a routerLink="/admin/employees">Employee List</a>
+      </li>
+      <!-- Add more navigation links here based on role -->
+      <!-- Example: <li *ngIf="userRole === 'Employee'"><a routerLink="/employee/profile">My Profile</a></li> -->
+    </ul>
+
+    <div class="logout-button">
+      <button (click)="logout()">Logout</button>
+    </div>
+  </div>
+  <div class="main-content">
+    <!-- Routed components will be displayed here -->
+    <router-outlet></router-outlet>
+  </div>
+</div>

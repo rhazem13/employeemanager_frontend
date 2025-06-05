@@ -1,16 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from '../../services/auth.service';
+import { RouterModule, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
-  selector: 'app-dashboard',
+  selector: 'app-main-layout',
   standalone: true,
-  imports: [CommonModule, RouterLink],
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss'],
+  imports: [RouterModule, CommonModule],
+  templateUrl: './main-layout.component.html',
+  styleUrls: ['./main-layout.component.scss'],
 })
-export class DashboardComponent implements OnInit {
+export class MainLayoutComponent implements OnInit {
   userRole: string | null = null;
 
   constructor(private authService: AuthService, private router: Router) {}
@@ -22,9 +22,5 @@ export class DashboardComponent implements OnInit {
   logout(): void {
     this.authService.logout();
     this.router.navigate(['/login']);
-  }
-
-  goToEmployeeList(): void {
-    this.router.navigate(['/admin/employees']);
   }
 }

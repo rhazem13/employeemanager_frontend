@@ -5,17 +5,53 @@
     {{ errorMessage }}
   </div>
 
+  <div class="filter-controls">
+    <label for="filter">Filter:</label>
+    <input
+      type="text"
+      id="filter"
+      (input)="applyFilter($event)"
+      placeholder="Filter by name, email, etc."
+    />
+  </div>
+
   <div *ngIf="!errorMessage && employees.length > 0" class="employee-table">
     <table>
       <thead>
         <tr>
-          <th>First Name</th>
-          <th>Last Name</th>
-          <th>Email</th>
-          <th>Phone Number</th>
-          <th>National ID</th>
-          <th>Age</th>
-          <th>Role</th>
+          <th
+            (click)="onSort('firstName')"
+            [class.sorted]="sortColumn === 'firstName'"
+          >
+            First Name
+          </th>
+          <th
+            (click)="onSort('lastName')"
+            [class.sorted]="sortColumn === 'lastName'"
+          >
+            Last Name
+          </th>
+          <th (click)="onSort('email')" [class.sorted]="sortColumn === 'email'">
+            Email
+          </th>
+          <th
+            (click)="onSort('phoneNumber')"
+            [class.sorted]="sortColumn === 'phoneNumber'"
+          >
+            Phone Number
+          </th>
+          <th
+            (click)="onSort('nationalId')"
+            [class.sorted]="sortColumn === 'nationalId'"
+          >
+            National ID
+          </th>
+          <th (click)="onSort('age')" [class.sorted]="sortColumn === 'age'">
+            Age
+          </th>
+          <th (click)="onSort('role')" [class.sorted]="sortColumn === 'role'">
+            Role
+          </th>
           <!-- Add other relevant headers as needed -->
         </tr>
       </thead>

@@ -17,7 +17,12 @@ export class EmployeeService {
 
   constructor(private http: HttpClient, private authService: AuthService) {}
 
-  getEmployees(pageNumber: number, pageSize: number): Observable<any> {
+  getEmployees(
+    pageNumber: number,
+    pageSize: number,
+    sortBy?: string,
+    filter?: string
+  ): Observable<any> {
     const token = this.authService.getToken();
     let headers = new HttpHeaders();
 
@@ -28,6 +33,14 @@ export class EmployeeService {
     let params = new HttpParams();
     params = params.append('PageNumber', pageNumber.toString());
     params = params.append('PageSize', pageSize.toString());
+
+    if (sortBy) {
+      params = params.append('SortBy', sortBy);
+    }
+
+    if (filter) {
+      params = params.append('Filter', filter);
+    }
 
     return this.http
       .get(`${this.apiUrl}/list`, { headers: headers, params: params })
