@@ -1,4 +1,10 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  ElementRef,
+  HostListener,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -6,7 +12,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { FormsModule } from '@angular/forms';
-import { HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import { EmployeeService } from '../../services/employee.service';
 import SignaturePad from 'signature_pad';
 
@@ -38,7 +44,7 @@ export class EmployeeSignatureComponent implements OnInit {
     private snackBar: MatSnackBar
   ) {}
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.checkExistingSignature();
   }
 
@@ -48,16 +54,55 @@ export class EmployeeSignatureComponent implements OnInit {
     }
   }
 
+  @HostListener('window:resize')
+  onResize() {
+    if (this.signatureMode === 'draw' && !this.hasSignature) {
+      this.resizeCanvas();
+    }
+  }
+
+  private resizeCanvas() {
+    const canvas = this.signaturePadElement.nativeElement;
+    const ratio = Math.max(window.devicePixelRatio || 1, 1);
+    const containerWidth = canvas.parentElement.offsetWidth;
+
+    // Set canvas width based on container width, with a max width of 600
+    const width = Math.min(containerWidth - 20, 600); // 20px for padding
+    const height = width * 0.4; // Maintain a 5:2 aspect ratio
+
+    canvas.width = width * ratio;
+    canvas.height = height * ratio;
+    canvas.style.width = `${width}px`;
+    canvas.style.height = `${height}px`;
+
+    // Scale the context to handle high DPI displays
+    const context = canvas.getContext('2d');
+    context.scale(ratio, ratio);
+
+    if (this.signaturePad) {
+      this.signaturePad.clear(); // Clear and reinitialize
+    }
+  }
+
   private initializeSignaturePad() {
     const canvas = this.signaturePadElement.nativeElement;
-    this.signaturePad = new SignaturePad(canvas);
+    this.resizeCanvas();
+
+    this.signaturePad = new SignaturePad(canvas, {
+      backgroundColor: 'rgb(255, 255, 255)',
+      penColor: 'rgb(0, 0, 0)',
+      velocityFilterWeight: 0.7,
+      minWidth: 0.5,
+      maxWidth: 2.5,
+      throttle: 16, // Increase smoothness on mobile
+    });
   }
 
   private checkExistingSignature(): void {
     this.isLoading = true;
     this.employeeService.getPersonalData().subscribe({
-      next: (data) => {
-        this.hasSignature = !!data.signature;
+      next: (response) => {
+        this.hasSignature = !!response.signature;
         this.isLoading = false;
       },
       error: (error: HttpErrorResponse) => {
@@ -110,16 +155,18 @@ export class EmployeeSignatureComponent implements OnInit {
   }
 
   onFileSelected(event: Event): void {
-    const file = (event.target as HTMLInputElement).files?.[0];
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+
     if (file) {
       if (!file.type.startsWith('image/')) {
-        this.showErrorSnackbar('Please upload an image file.');
+        this.showErrorSnackbar('Please select an image file.');
         return;
       }
 
       const reader = new FileReader();
-      reader.onload = (e: ProgressEvent<FileReader>) => {
-        this.uploadedSignature = e.target?.result as string;
+      reader.onload = () => {
+        this.uploadedSignature = reader.result as string;
       };
       reader.readAsDataURL(file);
     }
@@ -139,19 +186,11 @@ export class EmployeeSignatureComponent implements OnInit {
 
   private showSuccessMessage(message: string): void {
     this.snackBar.open(message, 'Close', {
-      duration: 5000,
+      duration: 3000,
       horizontalPosition: 'end',
       verticalPosition: 'top',
       panelClass: ['success-snackbar'],
     });
-  }
-
-  private showErrorMessage(error: HttpErrorResponse): void {
-    let message = 'An unexpected error occurred';
-    if (error.error?.message) {
-      message = error.error.message;
-    }
-    this.showErrorSnackbar(message);
   }
 
   private showErrorSnackbar(message: string): void {
@@ -161,5 +200,11 @@ export class EmployeeSignatureComponent implements OnInit {
       verticalPosition: 'top',
       panelClass: ['error-snackbar'],
     });
+  }
+
+  private showErrorMessage(error: HttpErrorResponse): void {
+    const message =
+      error.error?.message || 'An error occurred. Please try again later.';
+    this.showErrorSnackbar(message);
   }
 }
