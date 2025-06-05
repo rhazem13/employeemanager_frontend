@@ -51,7 +51,9 @@ export class EmployeeListComponent implements OnInit {
     'firstName',
     'lastName',
     'email',
-    'role',
+    'phoneNumber',
+    'nationalId',
+    'age',
     'actions',
   ];
 
@@ -188,6 +190,10 @@ export class EmployeeListComponent implements OnInit {
         });
       }
     });
+  }
+
+  editEmployee(id: number): void {
+    this.router.navigate(['/admin/employees/edit', id]);
   }
 }
 
