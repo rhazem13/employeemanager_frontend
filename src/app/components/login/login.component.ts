@@ -42,7 +42,13 @@ export class LoginComponent {
       this.authService.login(this.loginForm.value).subscribe({
         next: (response) => {
           this.isLoading = false;
-          this.router.navigate(['/dashboard']);
+          // Get user role and redirect accordingly
+          const userRole = this.authService.getUserRole();
+          if (userRole === 'Admin') {
+            this.router.navigate(['/dashboard']);
+          } else {
+            this.router.navigate(['/employee/dashboard']);
+          }
         },
         error: (error) => {
           this.isLoading = false;

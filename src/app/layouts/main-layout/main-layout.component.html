@@ -26,6 +26,7 @@
           routerLinkActive="active"
           [routerLinkActiveOptions]="{ exact: true }"
           (click)="closeMobileMenu()"
+          *ngIf="userRole === 'Admin'"
         >
           <mat-icon>dashboard</mat-icon>
           <span>Dashboard</span>

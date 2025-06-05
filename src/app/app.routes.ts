@@ -7,6 +7,9 @@ import { AddEmployeeComponent } from './components/add-employee/add-employee.com
 import { EditEmployeeComponent } from './components/edit-employee/edit-employee.component';
 import { MainLayoutComponent } from './layouts/main-layout/main-layout.component';
 import { authGuard } from './guards/auth.guard';
+import { AuthService } from './services/auth.service';
+import { Router } from '@angular/router';
+import { inject } from '@angular/core';
 
 export const routes: Routes = [
   // Public routes
@@ -27,15 +30,14 @@ export const routes: Routes = [
 
   // Protected routes using the main layout
   {
-    path: '', // This will be the base path for the layout
+    path: '',
     component: MainLayoutComponent,
-    canActivate: [authGuard], // Protect the entire layout
+    canActivate: [authGuard],
     children: [
       {
-        path: 'dashboard', // Relative path to the parent ('')
+        path: 'dashboard',
         component: DashboardComponent,
-        // Roles can be defined here or inherited from parent if all children have same roles
-        data: { roles: ['Admin', 'Employee'] },
+        data: { roles: ['Admin'] },
       },
       {
         path: 'admin',
@@ -87,10 +89,17 @@ export const routes: Routes = [
           },
         ],
       },
-      // Redirect to appropriate dashboard based on role
+      // Root path redirect based on role
       {
         path: '',
-        redirectTo: 'dashboard',
+        resolve: {
+          redirect: () => {
+            const authService = inject(AuthService);
+            const userRole = authService.getUserRole();
+            return userRole === 'Admin' ? '/dashboard' : '/employee/dashboard';
+          },
+        },
+        redirectTo: '',
         pathMatch: 'full',
       },
     ],
