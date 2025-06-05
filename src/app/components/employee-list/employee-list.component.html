@@ -140,47 +140,57 @@
     </table>
   </div>
 
-  <div class="pagination-controls" *ngIf="!errorMessage && totalItems > 0">
-    <span>Total Items: {{ totalItems }}</span>
-    <div class="page-info">Page {{ currentPage }} of {{ totalPages }}</div>
-    <div class="page-buttons">
+  <div class="pagination-controls" *ngIf="!errorMessage && totalCount > 0">
+    <div class="pagination-info">
+      <span>Total Items: {{ totalCount }}</span>
+      <div class="page-size-selector">
+        Items per page:
+        <select [(ngModel)]="pageSize" (change)="onPageSizeChange()">
+          <option value="5">5</option>
+          <option value="10">10</option>
+          <option value="25">25</option>
+          <option value="50">50</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="pagination-actions">
       <button
-        (click)="onPageChange(currentPage - 1)"
-        [disabled]="currentPage === 1"
+        mat-button
+        (click)="onPageChange(1)"
+        [disabled]="pageNumber === 1"
+      >
+        First
+      </button>
+      <button
+        mat-button
+        (click)="onPageChange(pageNumber - 1)"
+        [disabled]="pageNumber === 1"
       >
         Previous
       </button>
+      <span class="page-number">
+        Page {{ pageNumber }} of {{ getTotalPages() }}
+      </span>
       <button
-        (click)="onPageChange(currentPage + 1)"
-        [disabled]="currentPage === totalPages"
+        mat-button
+        (click)="onPageChange(pageNumber + 1)"
+        [disabled]="pageNumber === getTotalPages()"
       >
         Next
       </button>
-    </div>
-    <div class="page-size">
-      Items per page:
-      <select
-        (change)="
-          onPageChange({ pageIndex: 0, pageSize: $any($event.target).value })
-        "
-        [ngModel]="pageSize"
+      <button
+        mat-button
+        (click)="onPageChange(getTotalPages())"
+        [disabled]="pageNumber === getTotalPages()"
       >
-        <option value="5">5</option>
-        <option value="10">10</option>
-        <option value="25">25</option>
-        <option value="50">50</option>
-      </select>
+        Last
+      </button>
     </div>
   </div>
 
   <div
-    *ngIf="
-      !errorMessage &&
-      dataSource &&
-      dataSource.data &&
-      dataSource.data.length === 0 &&
-      totalItems === 0
-    "
+    *ngIf="!errorMessage && (!dataSource.data || dataSource.data.length === 0)"
   >
     <p>No employees found.</p>
   </div>

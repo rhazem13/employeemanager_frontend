@@ -41,10 +41,9 @@ import { FormsModule } from '@angular/forms';
 export class EmployeeListComponent implements OnInit {
   employees: Employee[] = [];
   errorMessage: string = '';
-  currentPage: number = 1;
+  pageNumber: number = 1;
   pageSize: number = 10;
-  totalItems: number = 0;
-  totalPages: number = 0;
+  totalCount: number = 0;
   sortColumn: string = '';
   sortDirection: string = 'asc';
   filterValue: string = '';
@@ -55,14 +54,12 @@ export class EmployeeListComponent implements OnInit {
     'phoneNumber',
     'nationalId',
     'age',
+    'role',
     'actions',
   ];
 
-  // Define allowed sortable columns (using camelCase in frontend for property access)
+  // Define allowed sortable columns
   allowedSortColumns = ['firstName', 'lastName', 'age'];
-
-  pageNumber: number = 1;
-  totalCount: number = 0;
 
   dataSource = new MatTableDataSource<any>([]);
 
@@ -88,7 +85,6 @@ export class EmployeeListComponent implements OnInit {
       )
       .subscribe({
         next: (response: any) => {
-          console.log('Response:', response);
           if (response && response.employees) {
             this.dataSource.data = response.employees;
             this.totalCount = response.totalCount;
@@ -104,29 +100,31 @@ export class EmployeeListComponent implements OnInit {
       });
   }
 
-  onPageChange(event: any): void {
-    if (typeof event === 'number') {
-      this.pageNumber = event;
-    } else {
-      this.pageNumber = event.pageIndex + 1;
-      this.pageSize = event.pageSize;
+  onPageChange(page: number): void {
+    if (page >= 1 && page <= this.getTotalPages()) {
+      this.pageNumber = page;
+      this.loadEmployees();
     }
+  }
+
+  onPageSizeChange(): void {
+    this.pageNumber = 1; // Reset to first page when changing page size
     this.loadEmployees();
   }
 
+  getTotalPages(): number {
+    return Math.ceil(this.totalCount / this.pageSize);
+  }
+
   onSort(column: string): void {
-    // Only sort if the column is in the allowed list
     if (this.allowedSortColumns.includes(column)) {
       if (this.sortColumn === column) {
-        // If clicking the same column, toggle direction
         this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
       } else {
-        // If clicking a new column, set it as the sort column and reset direction to asc
         this.sortColumn = column;
         this.sortDirection = 'asc';
       }
-      // Reset to the first page when sorting changes
-      this.pageNumber = 1;
+      this.pageNumber = 1; // Reset to first page when sorting changes
       this.loadEmployees();
     }
   }
@@ -134,8 +132,8 @@ export class EmployeeListComponent implements OnInit {
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.filterValue = filterValue.trim().toLowerCase();
-    this.currentPage = 1; // Reset to first page when filter changes
-    this.loadEmployees(); // Fetch data with the new filter
+    this.pageNumber = 1; // Reset to first page when filter changes
+    this.loadEmployees();
   }
 
   deleteEmployee(id: string): void {
@@ -205,12 +203,6 @@ export class EmployeeListComponent implements OnInit {
 
   editEmployee(id: number): void {
     this.router.navigate(['/admin/employees/edit', id]);
-  }
-
-  onPageSizeChange(pageSize: number): void {
-    this.pageSize = pageSize;
-    this.pageNumber = 1; // Reset to first page when page size changes
-    this.loadEmployees();
   }
 }
 
