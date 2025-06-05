@@ -23,11 +23,12 @@ import { AttendanceService } from '../../services/attendance.service';
     MatSnackBarModule,
   ],
   templateUrl: './employee-dashboard.component.html',
-  styleUrls: ['./employee-dashboard.component.css'],
+  styleUrls: ['./employee-dashboard.component.scss'],
 })
 export class EmployeeDashboardComponent implements OnInit {
   isLoading = false;
   todayAttendance: any = null;
+  hasCheckedInToday = false;
   recentAttendance: any[] = [];
   weeklySummary: any = null;
 
@@ -40,35 +41,43 @@ export class EmployeeDashboardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadDashboardData();
+    this.checkTodayStatus();
+    this.loadTodayAttendance();
   }
 
-  loadDashboardData(): void {
+  checkTodayStatus(): void {
+    this.isLoading = true;
+    this.attendanceService.isTodayGreen().subscribe({
+      next: (isGreen) => {
+        this.hasCheckedInToday = isGreen;
+        this.isLoading = false;
+      },
+      error: (error: HttpErrorResponse) => {
+        console.error("Error checking today's status:", error);
+        this.isLoading = false;
+        this.showErrorMessage(error);
+      },
+    });
+  }
+
+  loadTodayAttendance(): void {
     this.isLoading = true;
     const today = new Date();
     const startDate = new Date();
-    startDate.setDate(today.getDate() - 7); // Last 7 days
+    startDate.setHours(0, 0, 0, 0);
 
-    // Load attendance data
     this.attendanceService.getAttendanceHistory(startDate, today).subscribe({
       next: (data) => {
-        this.recentAttendance = data.dailyRecords;
-        if (data.weeklySummaries.length > 0) {
-          this.weeklySummary = data.weeklySummaries[0];
+        console.log(data);
+        if (data.dailyRecords.length > 0) {
+          this.todayAttendance = data.dailyRecords[0];
         }
-        // Find today's attendance
-        this.todayAttendance = data.dailyRecords.find(
-          (record) =>
-            new Date(record.checkInTime).toDateString() === today.toDateString()
-        );
         this.isLoading = false;
       },
       error: (error: HttpErrorResponse) => {
         console.error('Error loading attendance data:', error);
         this.isLoading = false;
-        this.showErrorMessage(
-          error.error?.message || 'Failed to load attendance data'
-        );
+        this.showErrorMessage(error);
       },
     });
   }
@@ -77,15 +86,13 @@ export class EmployeeDashboardComponent implements OnInit {
     this.isLoading = true;
     this.attendanceService.recordCheckIn().subscribe({
       next: (response) => {
-        this.showSuccessMessage(response.message);
-        this.loadDashboardData();
+        this.showSuccessMessage('Check-in recorded successfully');
+        this.checkTodayStatus();
+        this.loadTodayAttendance();
       },
       error: (error: HttpErrorResponse) => {
-        console.error('Error recording check-in:', error);
         this.isLoading = false;
-        this.showErrorMessage(
-          error.error?.message || 'Failed to record check-in'
-        );
+        this.showErrorMessage(error);
       },
     });
   }
@@ -94,15 +101,12 @@ export class EmployeeDashboardComponent implements OnInit {
     this.isLoading = true;
     this.attendanceService.recordCheckOut().subscribe({
       next: (response) => {
-        this.showSuccessMessage(response.message);
-        this.loadDashboardData();
+        this.showSuccessMessage('Check-out recorded successfully');
+        this.loadTodayAttendance();
       },
       error: (error: HttpErrorResponse) => {
-        console.error('Error recording check-out:', error);
         this.isLoading = false;
-        this.showErrorMessage(
-          error.error?.message || 'Failed to record check-out'
-        );
+        this.showErrorMessage(error);
       },
     });
   }
@@ -123,21 +127,33 @@ export class EmployeeDashboardComponent implements OnInit {
     });
   }
 
+  private showErrorMessage(error: HttpErrorResponse): void {
+    let message = 'An unexpected error occurred';
+    let panelClass = ['error-snackbar'];
+
+    if (error.status === 400) {
+      message = error.error?.message || 'Invalid request';
+      panelClass = ['info-snackbar']; // Use info style for 400 errors
+    } else if (error.status === 401) {
+      message = 'Session expired. Please log in again.';
+    } else if (error.error?.message) {
+      message = error.error.message;
+    }
+
+    this.snackBar.open(message, 'Close', {
+      duration: 5000,
+      horizontalPosition: 'end',
+      verticalPosition: 'top',
+      panelClass: panelClass,
+    });
+  }
+
   private showSuccessMessage(message: string): void {
     this.snackBar.open(message, 'Close', {
       duration: 3000,
       horizontalPosition: 'end',
       verticalPosition: 'top',
       panelClass: ['success-snackbar'],
-    });
-  }
-
-  private showErrorMessage(message: string): void {
-    this.snackBar.open(message, 'Close', {
-      duration: 5000,
-      horizontalPosition: 'end',
-      verticalPosition: 'top',
-      panelClass: ['error-snackbar'],
     });
   }
 }

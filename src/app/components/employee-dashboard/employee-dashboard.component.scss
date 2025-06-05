@@ -1,0 +1,163 @@
+.dashboard-container {
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 64px); // Adjust based on your header height
+}
+
+.loading-spinner {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+}
+
+.attendance-card {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+  transition: all 0.3s ease;
+
+  .mat-mdc-card-header {
+    padding: 24px 24px 0;
+
+    .mat-mdc-card-title {
+      font-size: 28px;
+      color: var(--primary-color);
+      margin-bottom: 16px;
+    }
+  }
+
+  .mat-mdc-card-content {
+    padding: 24px;
+  }
+}
+
+.attendance-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  text-align: center;
+  padding: 24px;
+  background-color: #e8f5e9; // Light green background
+  border-radius: 8px;
+  position: relative;
+  transition: all 0.3s ease;
+  border: 1px solid #c8e6c9;
+
+  &::before {
+    content: "✓";
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    font-size: 24px;
+    color: #4caf50;
+    font-weight: bold;
+  }
+
+  .status-text {
+    font-size: 20px;
+    color: #2e7d32; // Darker green for text
+    margin: 0;
+    font-weight: 500;
+  }
+
+  .time-info {
+    font-size: 18px;
+    color: #333;
+    margin: 0;
+  }
+
+  .hours-info {
+    font-size: 24px;
+    color: var(--primary-color);
+    font-weight: 500;
+    margin: 0;
+  }
+}
+
+.no-attendance {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  text-align: center;
+  padding: 24px 0;
+
+  .status-text {
+    font-size: 20px;
+    color: #666;
+    margin: 0;
+  }
+}
+
+.action-button {
+  min-width: 200px;
+  height: 48px;
+  font-size: 18px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background-color: var(--primary-color) !important;
+  color: white !important;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    background-color: var(--primary-color) !important;
+    opacity: 0.9;
+  }
+}
+
+@media (max-width: 600px) {
+  .dashboard-container {
+    padding: 16px;
+  }
+
+  .attendance-card {
+    .mat-mdc-card-header {
+      padding: 16px 16px 0;
+
+      .mat-mdc-card-title {
+        font-size: 24px;
+      }
+    }
+
+    .mat-mdc-card-content {
+      padding: 16px;
+    }
+  }
+
+  .attendance-info {
+    padding: 20px;
+
+    &::before {
+      font-size: 20px;
+      top: 12px;
+      right: 12px;
+    }
+  }
+
+  .status-text {
+    font-size: 18px;
+  }
+
+  .time-info {
+    font-size: 16px;
+  }
+
+  .hours-info {
+    font-size: 20px;
+  }
+
+  .action-button {
+    min-width: 180px;
+    height: 44px;
+    font-size: 16px;
+  }
+}

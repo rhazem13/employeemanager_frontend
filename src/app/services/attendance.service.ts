@@ -3,6 +3,7 @@ import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { AuthService } from './auth.service';
+import { map } from 'rxjs/operators';
 
 export interface DailyRecord {
   attendanceId: number;
@@ -37,6 +38,21 @@ export interface CheckInResponse {
 
 export interface CheckOutResponse {
   message: string;
+}
+
+export interface CheckInRecord {
+  id: number;
+  checkInTime: string;
+}
+
+export interface WeeklySummary {
+  weekStart: string;
+  checkInCount: number;
+}
+
+export interface AttendanceHistoryResponse {
+  checkIns: CheckInRecord[];
+  weeklySummaries: WeeklySummary[];
 }
 
 @Injectable({
@@ -107,5 +123,35 @@ export class AttendanceService {
       { checkOutTime },
       { headers: this.getHeaders() }
     );
+  }
+
+  isTodayGreen(): Observable<boolean> {
+    const today = new Date();
+    const startDate = new Date();
+    startDate.setHours(0, 0, 0, 0);
+
+    const params = new HttpParams()
+      .set('StartDate', startDate.toISOString())
+      .set('EndDate', today.toISOString());
+
+    return this.http
+      .get<AttendanceHistoryResponse>(`${this.apiUrl}/Attendance/history`, {
+        headers: this.getHeaders(),
+        params,
+      })
+      .pipe(
+        map((response) => {
+          if (!response.checkIns || response.checkIns.length === 0) {
+            return false;
+          }
+
+          // Check if any check-in is from today
+          const todayString = today.toDateString();
+          return response.checkIns.some(
+            (checkIn) =>
+              new Date(checkIn.checkInTime).toDateString() === todayString
+          );
+        })
+      );
   }
 }

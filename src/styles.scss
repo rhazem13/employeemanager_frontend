@@ -62,13 +62,18 @@ a:hover {
 }
 
 /* Snackbar styles */
+.error-snackbar {
+  background: #f44336;
+  color: white;
+}
+
 .success-snackbar {
   background: #4caf50;
   color: white;
 }
 
-.error-snackbar {
-  background: #f44336;
+.info-snackbar {
+  background: #ff9800;
   color: white;
 }
 
@@ -77,7 +82,8 @@ a:hover {
   background-color: inherit !important;
 }
 
+.error-snackbar .mat-simple-snackbar-action,
 .success-snackbar .mat-simple-snackbar-action,
-.error-snackbar .mat-simple-snackbar-action {
+.info-snackbar .mat-simple-snackbar-action {
   color: white;
 }
