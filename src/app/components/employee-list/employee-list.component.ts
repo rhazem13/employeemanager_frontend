@@ -11,6 +11,7 @@ import {
 } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { EmployeeService } from '../../services/employee.service';
+import { MatTableDataSource } from '@angular/material/table';
 
 interface Employee {
   id: string;
@@ -60,6 +61,11 @@ export class EmployeeListComponent implements OnInit {
   // Define allowed sortable columns (using camelCase in frontend for property access)
   allowedSortColumns = ['firstName', 'lastName', 'age'];
 
+  pageNumber: number = 1;
+  totalCount: number = 0;
+
+  dataSource = new MatTableDataSource<any>([]);
+
   constructor(
     private employeeService: EmployeeService,
     private dialog: MatDialog,
@@ -72,31 +78,34 @@ export class EmployeeListComponent implements OnInit {
   }
 
   loadEmployees(): void {
-    this.employeeService.getEmployees(1, 10).subscribe({
-      next: (response: { employees: Employee[] }) => {
-        this.employees = response.employees;
-      },
-      error: (error: Error) => {
-        console.error('Error loading employees', error);
-        this.snackBar.open('Failed to load employees', 'Close', {
-          duration: 3000,
-          horizontalPosition: 'end',
-          verticalPosition: 'top',
-        });
-      },
-    });
+    this.employeeService
+      .getEmployees(
+        this.pageNumber,
+        this.pageSize,
+        this.sortColumn,
+        this.filterValue
+      )
+      .subscribe({
+        next: (response: any) => {
+          console.log('Response:', response);
+          if (response && response.employees) {
+            this.dataSource.data = response.employees;
+            this.totalCount = response.totalCount;
+            this.pageNumber = response.pageNumber;
+            this.pageSize = response.pageSize;
+          }
+        },
+        error: (error) => {
+          console.error('Error fetching employees', error);
+          this.errorMessage =
+            'Failed to load employees. Please try again later.';
+        },
+      });
   }
 
-  onPageChange(page: number): void {
-    if (page >= 1 && page <= this.totalPages) {
-      this.currentPage = page;
-      this.loadEmployees();
-    }
-  }
-
-  onPageSizeChange(pageSize: number): void {
-    this.pageSize = pageSize;
-    this.currentPage = 1; // Reset to first page when page size changes
+  onPageChange(event: any): void {
+    this.pageNumber = event.pageIndex + 1;
+    this.pageSize = event.pageSize;
     this.loadEmployees();
   }
 
@@ -194,6 +203,12 @@ export class EmployeeListComponent implements OnInit {
 
   editEmployee(id: number): void {
     this.router.navigate(['/admin/employees/edit', id]);
+  }
+
+  onPageSizeChange(pageSize: number): void {
+    this.pageSize = pageSize;
+    this.pageNumber = 1; // Reset to first page when page size changes
+    this.loadEmployees();
   }
 }
 
