@@ -8,6 +8,11 @@ import {
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { AuthService } from './auth.service';
+
+interface SignatureResponse {
+  signature: string | null;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -106,6 +111,22 @@ export class EmployeeService {
     return this.http.post(`${this.apiUrl}/signature`, data, {
       headers: this.getHeaders(),
     });
+  }
+
+  checkSignature(): Observable<SignatureResponse> {
+    return this.http.get<SignatureResponse>(`${this.apiUrl}/signature`, {
+      headers: this.getHeaders(),
+    });
+  }
+
+  saveSignature(signatureData: string): Observable<any> {
+    return this.http.post(
+      `${this.apiUrl}/signature`,
+      { signature: signatureData },
+      {
+        headers: this.getHeaders(),
+      }
+    );
   }
 
   private getHeaders(): HttpHeaders {

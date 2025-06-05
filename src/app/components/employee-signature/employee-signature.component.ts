@@ -4,6 +4,7 @@ import {
   ViewChild,
   ElementRef,
   HostListener,
+  AfterViewInit,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
@@ -31,7 +32,7 @@ import SignaturePad from 'signature_pad';
   templateUrl: './employee-signature.component.html',
   styleUrls: ['./employee-signature.component.scss'],
 })
-export class EmployeeSignatureComponent implements OnInit {
+export class EmployeeSignatureComponent implements OnInit, AfterViewInit {
   @ViewChild('signaturePad') signaturePadElement!: ElementRef;
   signaturePad: SignaturePad | null = null;
   isLoading = false;
@@ -49,9 +50,10 @@ export class EmployeeSignatureComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    if (!this.hasSignature) {
+    // Initialize after a short delay to ensure the view is fully rendered
+    setTimeout(() => {
       this.initializeSignaturePad();
-    }
+    }, 100);
   }
 
   @HostListener('window:resize')
@@ -62,7 +64,9 @@ export class EmployeeSignatureComponent implements OnInit {
   }
 
   private resizeCanvas() {
-    const canvas = this.signaturePadElement.nativeElement;
+    const canvas = this.signaturePadElement?.nativeElement;
+    if (!canvas) return;
+
     const ratio = Math.max(window.devicePixelRatio || 1, 1);
     const containerWidth = canvas.parentElement.offsetWidth;
 
@@ -77,17 +81,27 @@ export class EmployeeSignatureComponent implements OnInit {
 
     // Scale the context to handle high DPI displays
     const context = canvas.getContext('2d');
-    context.scale(ratio, ratio);
+    if (context) {
+      context.scale(ratio, ratio);
+    }
 
     if (this.signaturePad) {
+      const data = this.signaturePad.toData();
       this.signaturePad.clear(); // Clear and reinitialize
+      if (data) {
+        this.signaturePad.fromData(data); // Restore the signature after resize
+      }
     }
   }
 
   private initializeSignaturePad() {
-    const canvas = this.signaturePadElement.nativeElement;
+    const canvas = this.signaturePadElement?.nativeElement;
+    if (!canvas) return;
+
+    // First resize the canvas
     this.resizeCanvas();
 
+    // Then initialize the signature pad
     this.signaturePad = new SignaturePad(canvas, {
       backgroundColor: 'rgb(255, 255, 255)',
       penColor: 'rgb(0, 0, 0)',
@@ -96,6 +110,16 @@ export class EmployeeSignatureComponent implements OnInit {
       maxWidth: 2.5,
       throttle: 16, // Increase smoothness on mobile
     });
+  }
+
+  toggleMode() {
+    this.signatureMode = this.signatureMode === 'draw' ? 'upload' : 'draw';
+    if (this.signatureMode === 'draw') {
+      // When switching to draw mode, wait for the canvas to be rendered
+      setTimeout(() => {
+        this.initializeSignaturePad();
+      }, 100);
+    }
   }
 
   private checkExistingSignature(): void {
@@ -138,13 +162,11 @@ export class EmployeeSignatureComponent implements OnInit {
 
   private saveSignatureToServer(signatureData: string): void {
     this.isLoading = true;
-    const base64Data = signatureData.split(',')[1] || signatureData;
-
-    this.employeeService.updateSignature({ signature: base64Data }).subscribe({
+    this.employeeService.saveSignature(signatureData).subscribe({
       next: () => {
         this.isLoading = false;
         this.hasSignature = true;
-        this.showSuccessMessage('Signature saved successfully');
+        this.showSuccessSnackbar('Signature saved successfully.');
       },
       error: (error: HttpErrorResponse) => {
         console.error('Error saving signature:', error);
@@ -165,46 +187,30 @@ export class EmployeeSignatureComponent implements OnInit {
       }
 
       const reader = new FileReader();
-      reader.onload = () => {
-        this.uploadedSignature = reader.result as string;
+      reader.onload = (e: ProgressEvent<FileReader>) => {
+        this.uploadedSignature = e.target?.result as string;
       };
       reader.readAsDataURL(file);
     }
-  }
-
-  toggleMode(): void {
-    this.signatureMode = this.signatureMode === 'draw' ? 'upload' : 'draw';
-    if (this.signatureMode === 'draw') {
-      this.uploadedSignature = null;
-      setTimeout(() => {
-        this.initializeSignaturePad();
-      });
-    } else if (this.signaturePad) {
-      this.signaturePad.clear();
-    }
-  }
-
-  private showSuccessMessage(message: string): void {
-    this.snackBar.open(message, 'Close', {
-      duration: 3000,
-      horizontalPosition: 'end',
-      verticalPosition: 'top',
-      panelClass: ['success-snackbar'],
-    });
-  }
-
-  private showErrorSnackbar(message: string): void {
-    this.snackBar.open(message, 'Close', {
-      duration: 5000,
-      horizontalPosition: 'end',
-      verticalPosition: 'top',
-      panelClass: ['error-snackbar'],
-    });
   }
 
   private showErrorMessage(error: HttpErrorResponse): void {
     const message =
       error.error?.message || 'An error occurred. Please try again later.';
     this.showErrorSnackbar(message);
+  }
+
+  private showErrorSnackbar(message: string): void {
+    this.snackBar.open(message, 'Close', {
+      duration: 5000,
+      panelClass: ['error-snackbar'],
+    });
+  }
+
+  private showSuccessSnackbar(message: string): void {
+    this.snackBar.open(message, 'Close', {
+      duration: 3000,
+      panelClass: ['success-snackbar'],
+    });
   }
 }
