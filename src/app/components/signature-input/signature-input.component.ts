@@ -5,6 +5,7 @@ import {
   OnInit,
   Output,
   ViewChild,
+  HostListener,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -79,14 +80,47 @@ export class SignatureInputComponent implements OnInit {
     }
   }
 
+  @HostListener('window:resize')
+  onResize() {
+    if (this.mode === 'draw') {
+      this.resizeCanvas();
+    }
+  }
+
+  private resizeCanvas() {
+    const canvas = this.signatureCanvas.nativeElement;
+    const ratio = Math.max(window.devicePixelRatio || 1, 1);
+    const containerWidth = canvas.parentElement.offsetWidth;
+
+    // Set canvas width based on container width, with a max width of 500
+    const width = Math.min(containerWidth - 20, 500); // 20px for padding
+    const height = width * 0.4; // Maintain a 5:2 aspect ratio
+
+    canvas.width = width * ratio;
+    canvas.height = height * ratio;
+    canvas.style.width = `${width}px`;
+    canvas.style.height = `${height}px`;
+
+    // Scale the context to handle high DPI displays
+    const context = canvas.getContext('2d');
+    context.scale(ratio, ratio);
+
+    if (this.signaturePad) {
+      this.signaturePad.clear(); // Clear and reinitialize
+    }
+  }
+
   private initializeSignaturePad() {
     const canvas = this.signatureCanvas.nativeElement;
-    canvas.width = 500;
-    canvas.height = 200;
+    this.resizeCanvas();
 
     this.signaturePad = new SignaturePad(canvas, {
       backgroundColor: 'rgb(255, 255, 255)',
       penColor: 'rgb(0, 0, 0)',
+      velocityFilterWeight: 0.7,
+      minWidth: 0.5,
+      maxWidth: 2.5,
+      throttle: 16, // Increase smoothness on mobile
     });
   }
 

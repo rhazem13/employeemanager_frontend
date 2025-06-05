@@ -2,6 +2,9 @@
   padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 
   h2 {
     color: var(--primary-color);
@@ -13,6 +16,7 @@
 .admin-dashboard {
   display: grid;
   gap: 30px;
+  flex: 1;
 
   h3 {
     color: #333;
@@ -90,6 +94,9 @@
 @media (max-width: 768px) {
   .dashboard-container {
     padding: 15px;
+    min-height: calc(100vh - 60px); /* Account for mobile menu button */
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch; /* For smooth scrolling on iOS */
   }
 
   .stats-grid {

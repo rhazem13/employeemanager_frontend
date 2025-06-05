@@ -24,127 +24,135 @@
     "
     class="employee-table"
   >
-    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-      <!-- First Name Column -->
-      <ng-container matColumnDef="firstName">
-        <th
-          mat-header-cell
-          *matHeaderCellDef
-          (click)="onSort('firstName')"
-          class="sortable-header"
-        >
-          First Name
-          <span class="sort-icon">
-            {{
-              sortColumn === "firstName"
-                ? sortDirection === "asc"
-                  ? "↑"
-                  : "↓"
-                : ""
-            }}
-          </span>
-        </th>
-        <td mat-cell *matCellDef="let employee">{{ employee.firstName }}</td>
-      </ng-container>
-
-      <!-- Last Name Column -->
-      <ng-container matColumnDef="lastName">
-        <th
-          mat-header-cell
-          *matHeaderCellDef
-          (click)="onSort('lastName')"
-          class="sortable-header"
-        >
-          Last Name
-          <span class="sort-icon">
-            {{
-              sortColumn === "lastName"
-                ? sortDirection === "asc"
-                  ? "↑"
-                  : "↓"
-                : ""
-            }}
-          </span>
-        </th>
-        <td mat-cell *matCellDef="let employee">{{ employee.lastName }}</td>
-      </ng-container>
-
-      <!-- Email Column -->
-      <ng-container matColumnDef="email">
-        <th mat-header-cell *matHeaderCellDef>Email</th>
-        <td mat-cell *matCellDef="let employee">{{ employee.email }}</td>
-      </ng-container>
-
-      <!-- Phone Number Column -->
-      <ng-container matColumnDef="phoneNumber">
-        <th mat-header-cell *matHeaderCellDef>Phone Number</th>
-        <td mat-cell *matCellDef="let employee">{{ employee.phoneNumber }}</td>
-      </ng-container>
-
-      <!-- National ID Column -->
-      <ng-container matColumnDef="nationalId">
-        <th mat-header-cell *matHeaderCellDef>National ID</th>
-        <td mat-cell *matCellDef="let employee">{{ employee.nationalId }}</td>
-      </ng-container>
-
-      <!-- Age Column -->
-      <ng-container matColumnDef="age">
-        <th
-          mat-header-cell
-          *matHeaderCellDef
-          (click)="onSort('age')"
-          class="sortable-header"
-        >
-          Age
-          <span class="sort-icon">
-            {{
-              sortColumn === "age" ? (sortDirection === "asc" ? "↑" : "↓") : ""
-            }}
-          </span>
-        </th>
-        <td mat-cell *matCellDef="let employee">{{ employee.age }}</td>
-      </ng-container>
-
-      <!-- Role Column -->
-      <ng-container matColumnDef="role">
-        <th mat-header-cell *matHeaderCellDef>Role</th>
-        <td mat-cell *matCellDef="let employee">{{ employee.role }}</td>
-      </ng-container>
-
-      <!-- Actions Column -->
-      <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef>Actions</th>
-        <td mat-cell *matCellDef="let employee">
-          <button
-            mat-icon-button
-            color="primary"
-            (click)="editEmployee(employee.id)"
+    <div class="table-container">
+      <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+        <!-- First Name Column -->
+        <ng-container matColumnDef="firstName">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            (click)="onSort('firstName')"
+            class="sortable-header"
           >
-            <mat-icon style="color: var(--primary-color)">edit</mat-icon>
-          </button>
-          <button
-            mat-icon-button
-            color="warn"
-            (click)="deleteEmployee(employee.id)"
-          >
-            <mat-icon style="color: var(--primary-color)">delete</mat-icon>
-          </button>
-        </td>
-      </ng-container>
+            First Name
+            <span class="sort-icon">
+              {{
+                sortColumn === "firstName"
+                  ? sortDirection === "asc"
+                    ? "↑"
+                    : "↓"
+                  : ""
+              }}
+            </span>
+          </th>
+          <td mat-cell *matCellDef="let employee">{{ employee.firstName }}</td>
+        </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-      <tr class="mat-row" *matNoDataRow>
-        <td class="mat-cell" colspan="7">No employees found</td>
-      </tr>
-    </table>
+        <!-- Last Name Column -->
+        <ng-container matColumnDef="lastName">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            (click)="onSort('lastName')"
+            class="sortable-header"
+          >
+            Last Name
+            <span class="sort-icon">
+              {{
+                sortColumn === "lastName"
+                  ? sortDirection === "asc"
+                    ? "↑"
+                    : "↓"
+                  : ""
+              }}
+            </span>
+          </th>
+          <td mat-cell *matCellDef="let employee">{{ employee.lastName }}</td>
+        </ng-container>
+
+        <!-- Email Column -->
+        <ng-container matColumnDef="email">
+          <th mat-header-cell *matHeaderCellDef>Email</th>
+          <td mat-cell *matCellDef="let employee">{{ employee.email }}</td>
+        </ng-container>
+
+        <!-- Phone Number Column -->
+        <ng-container matColumnDef="phoneNumber">
+          <th mat-header-cell *matHeaderCellDef>Phone Number</th>
+          <td mat-cell *matCellDef="let employee">
+            {{ employee.phoneNumber }}
+          </td>
+        </ng-container>
+
+        <!-- National ID Column -->
+        <ng-container matColumnDef="nationalId">
+          <th mat-header-cell *matHeaderCellDef>National ID</th>
+          <td mat-cell *matCellDef="let employee">{{ employee.nationalId }}</td>
+        </ng-container>
+
+        <!-- Age Column -->
+        <ng-container matColumnDef="age">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            (click)="onSort('age')"
+            class="sortable-header"
+          >
+            Age
+            <span class="sort-icon">
+              {{
+                sortColumn === "age"
+                  ? sortDirection === "asc"
+                    ? "↑"
+                    : "↓"
+                  : ""
+              }}
+            </span>
+          </th>
+          <td mat-cell *matCellDef="let employee">{{ employee.age }}</td>
+        </ng-container>
+
+        <!-- Role Column -->
+        <ng-container matColumnDef="role">
+          <th mat-header-cell *matHeaderCellDef>Role</th>
+          <td mat-cell *matCellDef="let employee">{{ employee.role }}</td>
+        </ng-container>
+
+        <!-- Actions Column -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let employee">
+            <button
+              mat-icon-button
+              color="primary"
+              (click)="editEmployee(employee.id)"
+            >
+              <mat-icon style="color: var(--primary-color)">edit</mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              color="warn"
+              (click)="deleteEmployee(employee.id)"
+            >
+              <mat-icon style="color: var(--primary-color)">delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" colspan="8">No employees found</td>
+        </tr>
+      </table>
+    </div>
   </div>
 
   <div class="pagination-controls" *ngIf="!errorMessage && totalCount > 0">
     <div class="pagination-info">
       <span>Total Items: {{ totalCount }}</span>
       <div class="page-size-selector">
-        Items per page:
+        <span>Items per page:</span>
         <select [(ngModel)]="pageSize" (change)="onPageSizeChange()">
           <option value="5">5</option>
           <option value="10">10</option>

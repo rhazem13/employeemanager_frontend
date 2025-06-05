@@ -60,6 +60,7 @@
     app-signature-input {
       display: block;
       margin-top: 0.5rem;
+      width: 100%;
 
       ::ng-deep {
         // Override signature component styles to match form
@@ -69,6 +70,8 @@
           border: none;
           background: none;
           box-shadow: none;
+          width: 100%;
+          max-width: 100%;
         }
 
         // Match button styles with form
@@ -93,31 +96,58 @@
         }
 
         // Match canvas and upload container styles
-  .signature-input {
+        .signature-input {
           border: 1px solid #ddd;
           border-radius: 4px;
           padding: 1rem;
           margin-top: 0.5rem;
+          width: 100%;
+          box-sizing: border-box;
 
-          canvas {
-            border: 1px solid #ddd;
-            border-radius: 4px;
-    }
+          .canvas-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
 
-          .canvas-actions button {
-            margin-top: 0.5rem;
+            canvas {
+              border: 1px solid #ddd;
+              border-radius: 4px;
+              width: 100%;
+              max-width: 100%;
+              touch-action: none;
+            }
+
+            .canvas-actions {
+              width: 100%;
+              display: flex;
+              gap: 1rem;
+              margin-top: 1rem;
+
+              button {
+                flex: 1;
+              }
+            }
           }
 
           input[type="file"] {
+            width: 100%;
             border: 2px dashed #ddd;
             padding: 1rem;
             text-align: center;
-      border-radius: 4px;
-      cursor: pointer;
+            border-radius: 4px;
+            cursor: pointer;
+            box-sizing: border-box;
 
-      &:hover {
+            &:hover {
               border-color: var(--primary-color);
-    }
+            }
+          }
+
+          .signature-preview {
+            max-width: 100%;
+            height: auto;
+            margin-top: 1rem;
           }
         }
       }
