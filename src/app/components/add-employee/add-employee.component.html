@@ -181,17 +181,10 @@
 
     <!-- Signature Field -->
     <div class="form-group">
-      <label for="signature">Signature (Optional)</label>
-      <input
-        type="file"
-        id="signature"
-        accept="image/*"
-        (change)="onSignatureChange($event)"
-        class="signature-input"
-      />
-      <div class="signature-preview" *ngIf="signaturePreview">
-        <img [src]="signaturePreview" alt="Signature preview" />
-      </div>
+      <label>Signature (Optional)</label>
+      <app-signature-input
+        (signatureChange)="onSignatureChange($event)"
+      ></app-signature-input>
     </div>
 
     <!-- Hidden Role Field -->

@@ -9,11 +9,17 @@ import { EmployeeService } from '../../services/employee.service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { SignatureInputComponent } from '../signature-input/signature-input.component';
 
 @Component({
   selector: 'app-add-employee',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, MatSnackBarModule],
+  imports: [
+    ReactiveFormsModule,
+    CommonModule,
+    MatSnackBarModule,
+    SignatureInputComponent,
+  ],
   templateUrl: './add-employee.component.html',
   styleUrl: './add-employee.component.scss',
 })
@@ -23,7 +29,7 @@ export class AddEmployeeComponent implements OnInit {
   validationErrors: any = {};
   backendErrors: string[] = [];
   objectKeys = Object.keys;
-  signaturePreview: string | null = null;
+  signatureData: string | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -53,7 +59,6 @@ export class AddEmployeeComponent implements OnInit {
       age: [null, [Validators.required, Validators.min(18)]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      signature: [''], // Optional signature field
       role: ['Employee'], // Hidden field, always set to 'Employee'
     });
   }
@@ -86,35 +91,8 @@ export class AddEmployeeComponent implements OnInit {
     return '';
   }
 
-  onSignatureChange(event: Event): void {
-    const file = (event.target as HTMLInputElement).files?.[0];
-    if (file) {
-      if (file.size > 5000000) {
-        // 5MB limit
-        this.snackBar.open('Signature image must be less than 5MB', 'Close', {
-          duration: 3000,
-          horizontalPosition: 'end',
-          verticalPosition: 'top',
-        });
-        return;
-      }
-
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        this.signaturePreview = e.target.result;
-        this.addEmployeeForm.patchValue({
-          signature: e.target.result,
-        });
-      };
-      reader.readAsDataURL(file);
-    }
-  }
-
-  clearSignature(): void {
-    this.signaturePreview = null;
-    this.addEmployeeForm.patchValue({
-      signature: '',
-    });
+  onSignatureChange(signatureData: string) {
+    this.signatureData = signatureData;
   }
 
   onSubmit(): void {
@@ -123,10 +101,10 @@ export class AddEmployeeComponent implements OnInit {
     this.backendErrors = [];
 
     if (this.addEmployeeForm.valid) {
-      const formData = this.addEmployeeForm.value;
-
-      // Always set role to 'Employee'
-      formData.role = 'Employee';
+      const formData = {
+        ...this.addEmployeeForm.value,
+        signature: this.signatureData,
+      };
 
       this.employeeService.addEmployee(formData).subscribe({
         next: (response) => {
