@@ -7,15 +7,21 @@
       <div class="stats-grid">
         <div class="stat-card">
           <h4>Total Employees</h4>
-          <p>Loading...</p>
+          <p *ngIf="isLoading">Loading...</p>
+          <p *ngIf="!isLoading && !error">{{ stats.totalEmployees }}</p>
+          <p *ngIf="error" class="error-text">Error loading data</p>
         </div>
         <div class="stat-card">
           <h4>Present Today</h4>
-          <p>Loading...</p>
+          <p *ngIf="isLoading">Loading...</p>
+          <p *ngIf="!isLoading && !error">{{ stats.presentToday }}</p>
+          <p *ngIf="error" class="error-text">Error loading data</p>
         </div>
         <div class="stat-card">
-          <h4>On Leave</h4>
-          <p>Loading...</p>
+          <h4>Not Present Today</h4>
+          <p *ngIf="isLoading">Loading...</p>
+          <p *ngIf="!isLoading && !error">{{ stats.nonPresentToday }}</p>
+          <p *ngIf="error" class="error-text">Error loading data</p>
         </div>
       </div>
     </div>
